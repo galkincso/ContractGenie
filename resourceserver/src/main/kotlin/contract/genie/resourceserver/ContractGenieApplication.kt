@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
 class ContractGenieApplication {
-	@Bean
+	/*@Bean
 	fun run (repository: ContractRepository) = ApplicationRunner {
 		repository.save(ContractModel(
 			name = "Munkaszerződés"
@@ -18,7 +18,7 @@ class ContractGenieApplication {
 		repository.save(ContractModel(
 			name = "Bérleti szerződés"
 		))
-	}
+	}*/
 }
 
 fun main(args: Array<String>) {

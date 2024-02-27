@@ -10,10 +10,10 @@ function App() {
 
   useEffect(() => {
     axios
-    .get('/api/contracts')
+    .get('/findall')
     .then(response => {
-      setContracts(response.data._embedded.contracts);
-      console.log(response.data._embedded.contracts);
+      setContracts(response.data);
+      console.log(response);
     })
 
   }, [])
@@ -27,7 +27,7 @@ function App() {
       </div>
       <div>
         <p>Contract patterns:</p>
-        {contracts.map((contract)=><p key={contract.name}>{contract.name}</p>
+        {contracts.map((contract)=><p key={contract.id}>{contract.id}-{contract.name}</p>
         )}
       </div>
     </>
