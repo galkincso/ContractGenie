@@ -16,7 +16,7 @@ class WebController {
 
     @RequestMapping("/save")
     fun save() : String {
-        repository.save(ContractModel(4, "Teszt1"))
+        repository.save(ContractModel(5, "Teszt2"))
 
         return "Done"
     }
