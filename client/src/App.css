@@ -1,3 +1,4 @@
+
 .App {
   text-align: center;
 }
@@ -35,4 +36,16 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* CLASSES */
+/* MARGIN - BOTTOM */
+.header {
+  text-align: center;
+  margin-bottom: 100px;
+}
+.options {
+  display: flex;
+  justify-content: center;
+  gap: 200px;
 }
