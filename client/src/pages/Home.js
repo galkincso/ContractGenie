@@ -9,7 +9,6 @@ const Home = () => {
     function handleClickList (event) {
         navigate("/list");
     }
-
     function handleClickUpload (event) {
         navigate("/upload");
     }

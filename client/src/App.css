@@ -42,10 +42,14 @@
 /* MARGIN - BOTTOM */
 .header {
   text-align: center;
-  margin-bottom: 100px;
+  margin-bottom: 80px;
 }
 .options {
   display: flex;
   justify-content: center;
   gap: 200px;
+}
+.list-table {
+  display: flex;
+  justify-content: center;
 }

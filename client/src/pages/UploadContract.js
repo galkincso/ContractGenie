@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 const UploadContract = () => {
 
@@ -7,7 +9,14 @@ const UploadContract = () => {
 
     return (
         <>
-            <p>Upload Contracts</p>
+            <div className='header'>
+                <Box sx={{ width: '100%' }}>
+                    <Typography variant="h4">
+                        Szerződés feltöltése
+                    </Typography>
+                </Box>
+            </div>
+
         </>
     )
 
