@@ -42,7 +42,7 @@
 /* MARGIN - BOTTOM */
 .header {
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 }
 .options {
   display: flex;
@@ -50,6 +50,15 @@
   gap: 200px;
 }
 .list-table {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+.center-text {
+  text-align: center;
+  margin-bottom: 50px;
+}
+.btnBack {
   display: flex;
   justify-content: center;
 }

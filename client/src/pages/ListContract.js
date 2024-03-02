@@ -10,6 +10,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 
 const ListContract = () => {
 
@@ -32,7 +35,7 @@ const ListContract = () => {
 
 
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
     function createData(name, analize) {
         return { name, analize };
@@ -45,11 +48,14 @@ const ListContract = () => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    function handleBack(event) {
+        navigate("/");
+    }
 
 
     return (
         <>
-            <div className='header'>
+            <div className='center-text'>
                 <Box sx={{ width: '100%' }}>
                     <Typography variant="h4">
                         Szerződések listázása
@@ -93,6 +99,7 @@ const ListContract = () => {
                                         );
                                     })}
                             </TableBody>
+
                         </Table>
                     </TableContainer>
                     <TablePagination
@@ -102,8 +109,14 @@ const ListContract = () => {
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}/>
+                        onRowsPerPageChange={handleChangeRowsPerPage} />
                 </Paper>
+            </div>
+            <div className='btnBack'>
+                <Button
+                    onClick={handleBack}
+                    variant="contained" size='large'
+                    startIcon={<ArrowBackIcon />}>Vissza</Button>
             </div>
         </>
     )
