@@ -1,13 +1,26 @@
 package contract.genie.resourceserver
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
+import org.springframework.web.bind.annotation.*
 
 @Entity
-data class ContractModel (
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long = -1,
-    var name: String
-) {}
+@Table(name = "CONTRACTS")
+data class ContractModel(
+    @Id val id: String?,
+    val name: String
+)
+
+@RestController
+class ContractController(val service: ContractService) {
+    @GetMapping("/")
+    fun index(): List<ContractModel> = service.findContracts()
+
+    @GetMapping("/{id}")
+    fun index(@PathVariable id: String): List<ContractModel> =
+        service.findContractById(id)
+
+    @PostMapping("/")
+    fun post(@RequestBody contract: ContractModel) {
+        service.save(contract)
+    }
+}
