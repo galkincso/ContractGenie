@@ -5,7 +5,11 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import ListContract from './pages/ListContract';
+import UploadContract from './pages/UploadContract';
+
 
 
 function App() {
@@ -33,10 +37,14 @@ function App() {
         </Box>
       </div>
       
-      <div className='options'>
-        <Button variant="contained" size='large'>Szerződések listázása</Button>
-        <Button variant="contained" size='large'>Szerződés feltöltése</Button>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/list" element={<ListContract />} />
+          <Route path="/upload" element={<UploadContract />} />
+        </Routes>
+      </BrowserRouter>
+
     </>
   );
 }
