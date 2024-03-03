@@ -22,6 +22,10 @@ const UploadContract = () => {
         navigate("/");
     }
 
+    function handleSave(event) {
+        console.log(event.target.files[0]);
+    }
+
     return (
         <>
             <div className='header'>
@@ -45,7 +49,7 @@ const UploadContract = () => {
                                 <TableRow>
                                     <TableCell align="left">Fotó feltöltése</TableCell>
                                     <TableCell align="right">
-                                        <TextField type='file' id="standard-basic" label="Standard" variant="standard" />
+                                        <TextField onChange={handleSave} type='file' id="standard-basic" label="Standard" variant="standard" />
                                     </TableCell>
                                 </TableRow>
                             </TableBody>
@@ -54,11 +58,13 @@ const UploadContract = () => {
                 </Paper>
             </div>
             <div className='btnBack options'>
-            <Button
-                    variant="contained" size='large'
-                    startIcon={<DoneIcon />}>Kész</Button>
                 <Button
-                    onClick={handleBack}
+                    onClick={handleSave}
+                    variant="contained" size='large'
+                    startIcon={<DoneIcon />}>Kész
+                </Button>
+                <Button
+                   
                     variant="contained" size='large'
                     startIcon={<ClearIcon />}>Mégsem</Button>
             </div>
