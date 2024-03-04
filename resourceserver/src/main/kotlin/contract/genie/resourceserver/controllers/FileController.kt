@@ -35,22 +35,17 @@ class FileController {
     }
 
     @GetMapping("/files")
-    fun getFiles(): ResponseEntity<List<Path>> {
+    fun getFiles(): ResponseEntity<List<String>> {
 
         val projectDirAbsolutePath = Paths.get("").toAbsolutePath().toString()
         val resourcesPath = Paths.get(projectDirAbsolutePath, "/uploads/")
 
-        var lista = listOf<Path>()
+        var lista = listOf<String>()
 
         val paths = Files.walk(resourcesPath)
             .filter { item -> Files.isRegularFile(item) }
-            .forEach { item -> lista.add(item.fileName)}
+            .forEach { item -> lista.add(item.fileName.toString())}
 
-        //System.out.println("LISTA"+lista)
-        for (it in lista) {
-            System.out.println(it)
-        }
-        //System.out.println("filename: $item")
         return ResponseEntity.status(HttpStatus.OK).body(lista)
     }
 
@@ -62,5 +57,4 @@ class FileController {
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
             .body<Resource?>(file)
     }
-
 }
