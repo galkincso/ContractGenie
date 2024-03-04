@@ -1,5 +1,7 @@
-package contract.genie.resourceserver
+package contract.genie.resourceserver.controllers
 
+import contract.genie.resourceserver.models.ContractModel
+import contract.genie.resourceserver.services.ContractService
 import org.springframework.web.bind.annotation.*
 
 @RestController

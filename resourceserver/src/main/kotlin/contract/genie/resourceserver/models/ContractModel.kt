@@ -1,4 +1,4 @@
-package contract.genie.resourceserver
+package contract.genie.resourceserver.models
 
 import jakarta.persistence.*
 
