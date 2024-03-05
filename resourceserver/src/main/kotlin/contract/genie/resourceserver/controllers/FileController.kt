@@ -1,6 +1,7 @@
 package contract.genie.resourceserver.controllers
 
 import contract.genie.resourceserver.services.FileService
+import org.apache.tomcat.util.http.fileupload.IOUtils
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.Resource
@@ -10,9 +11,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.io.IOException
+import java.io.InputStream
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
+
 
 @Controller
 @CrossOrigin("http://localhost:8081")

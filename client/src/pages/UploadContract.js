@@ -53,7 +53,7 @@ const UploadContract = () => {
                                     <TableRow>
                                         <TableCell align="left">Szerződés neve</TableCell>
                                         <TableCell align="right">
-                                            <TextField id="standard-basic" label="Standard" variant="standard" />
+                                            <TextField id="standard-basic" label="Példa szerződés" variant="standard" />
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
@@ -74,7 +74,7 @@ const UploadContract = () => {
                         startIcon={<DoneIcon />}>Kész
                     </Button>
                     <Button
-
+                        onClick={handleBack}
                         variant="contained" size='large'
                         startIcon={<ClearIcon />}>Mégsem</Button>
                 </div>

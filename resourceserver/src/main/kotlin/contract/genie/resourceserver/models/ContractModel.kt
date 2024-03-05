@@ -6,5 +6,6 @@ import jakarta.persistence.*
 @Table(name = "contracts")
 data class ContractModel(
     @Id val id: String?,
-    val name: String
+    val name: String,
+    val fileName: String
 )

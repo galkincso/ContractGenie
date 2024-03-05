@@ -12,34 +12,30 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
+
 
 
 const ListContract = () => {
 
     const navigate = useNavigate();
+    const [contracts, setContracts] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get('/contracts')
+            .then(response => setContracts(response.data))
+    }, [])
 
     const columns = [
         { id: 'name', label: 'Név' },
         { id: 'analize', label: 'Kifejtés' },
     ];
-    const rows = [
-        createData('Megbízási szerződés', 'Kérem az adatokat'),
-        createData('Vállalkozási ', 'Kérem az adatokat'),
-        createData('Letéti szerződés', 'Kérem az adatokat'),
-        createData('Ajándékozási szerződés', 'Kérem az adatokat'),
-        createData('Bérleti szerződés', 'Kérem az adatokat'),
-        createData('Meghatalmazás', 'Kérem az adatokat'),
-        createData('Adásvételi szerződés', 'Kérem az adatokat'),
-        createData('Munkaszerződés', 'Kérem az adatokat')
-    ];
-
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-    function createData(name, analize) {
-        return { name, analize };
-    }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -50,6 +46,9 @@ const ListContract = () => {
     };
     function handleBack(event) {
         navigate("/");
+    };
+    function handleAnalize(id) {
+        navigate("/details/"+id);
     }
 
 
@@ -80,21 +79,16 @@ const ListContract = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows
+                                {contracts
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row) => {
                                         return (
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                                {columns.map((column) => {
-                                                    const value = row[column.id];
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {column.format && typeof value === 'number'
-                                                                ? column.format(value)
-                                                                : value}
-                                                        </TableCell>
-                                                    );
-                                                })}
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                                <TableCell key={row.id}>{row.name}</TableCell>
+                                                <TableCell key={row.name}><Button 
+                                                    onClick={e => {handleAnalize(row.id);}}
+                                                    variant="contained" 
+                                                    color="primary">Kérem az adatokat</Button></TableCell>
                                             </TableRow>
                                         );
                                     })}
@@ -105,7 +99,7 @@ const ListContract = () => {
                     <TablePagination
                         rowsPerPageOptions={[3, 5, 10]}
                         component="div"
-                        count={rows.length}
+                        count={contracts.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
@@ -123,3 +117,24 @@ const ListContract = () => {
 
 };
 export default ListContract;
+
+/*
+{rows
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((row) => {
+                                        return (
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                                {columns.map((column) => {
+                                                    const value = row[column.id];
+                                                    return (
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {column.format && typeof value === 'number'
+                                                                ? column.format(value)
+                                                                : value}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                            </TableRow>
+                                        );
+                                    })}
+*/
