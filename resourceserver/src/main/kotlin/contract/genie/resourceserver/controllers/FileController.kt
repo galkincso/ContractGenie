@@ -1,5 +1,6 @@
 package contract.genie.resourceserver.controllers
 
+import com.sun.org.apache.bcel.internal.util.Args.require
 import contract.genie.resourceserver.services.FileService
 import org.apache.tomcat.util.http.fileupload.IOUtils
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
@@ -60,4 +61,14 @@ class FileController {
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
             .body<Resource?>(file)
     }
+
+    /*
+    @GetMapping("/analize/{filename:.+}")
+    @ResponseBody
+    fun getFileData(@PathVariable filename: String?): ResponseEntity<Resource> {
+        val file: Resource = storageService.load(filename!!)
+        val tess = require('tessaract.js')
+        return ResponseEntity.status(HttpStatus.OK).body(file)
+    }
+    */
 }

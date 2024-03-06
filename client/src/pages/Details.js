@@ -5,8 +5,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { createWorker } from 'tesseract.js';
-
 
 const Details = () => {
 
@@ -48,12 +46,3 @@ const Details = () => {
 
 };
 export default Details;
-
-/*
-  (async () => {
-                const worker = await createWorker('hu');
-                const ret = await worker.recognize('http://localhost:8080/files/contract-example.webp');
-                console.log(ret.data.text);
-                await worker.terminate();
-              })();
- */
