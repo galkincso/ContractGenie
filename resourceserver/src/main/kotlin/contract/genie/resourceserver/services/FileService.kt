@@ -60,6 +60,16 @@ class FileService (val db : FileRepository) {
             throw  RuntimeException("Error: ${e.message}" );
         }
     }
+
+    fun delete(filename: String?) {
+        try {
+            val file : Path = root.resolve(filename)
+            Files.deleteIfExists(file)
+        } catch (e: MalformedURLException) {
+            throw RuntimeException("Error: ${e.message}")
+        }
+    }
+
     fun deleteAll() {
         FileSystemUtils.deleteRecursively(root.toFile())
     }

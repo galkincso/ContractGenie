@@ -1,8 +1,6 @@
 package contract.genie.resourceserver.controllers
 
-import com.sun.org.apache.bcel.internal.util.Args.require
 import contract.genie.resourceserver.services.FileService
-import org.apache.tomcat.util.http.fileupload.IOUtils
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.Resource
@@ -19,7 +17,7 @@ import java.nio.file.Paths
 
 
 @Controller
-@CrossOrigin("http://localhost:8081")
+@CrossOrigin
 class FileController {
 
     @Autowired
@@ -61,6 +59,20 @@ class FileController {
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
             .body<Resource?>(file)
     }
+
+    @DeleteMapping("/files/delete/{filename:.+}")
+    fun deleteFileById(@PathVariable filename: String?) : ResponseEntity<String>? {
+        var message = ""
+        return try {
+            storageService.delete(filename)
+            message = "Deleting was successful: " + filename
+            ResponseEntity.status(HttpStatus.OK).body("Sikeres törlés")
+        } catch (e: Exception) {
+            message = "Could not delete the file: " + filename + ". Error: " + e.message
+            ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("A törlés nem sikerült")
+        }
+    }
+
 
     /*
     @GetMapping("/analize/{filename:.+}")

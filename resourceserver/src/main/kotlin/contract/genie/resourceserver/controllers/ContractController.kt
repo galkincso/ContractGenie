@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.Optional
 
 @RestController
+@CrossOrigin
 class ContractController(val service: ContractService) {
     @GetMapping("/contracts")
     fun index(): List<ContractModel> = service.findContracts()

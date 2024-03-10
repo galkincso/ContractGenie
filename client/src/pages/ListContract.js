@@ -32,6 +32,7 @@ const ListContract = () => {
     const columns = [
         { id: 'name', label: 'Név' },
         { id: 'analize', label: 'Kifejtés' },
+        { id: 'delete', label: 'Törlés' },
     ];
 
     const [page, setPage] = React.useState(0);
@@ -49,6 +50,9 @@ const ListContract = () => {
     };
     function handleAnalize(id) {
         navigate("/details/"+id);
+    }
+    function handleDelete(id) {
+        console.log('ID: ', id);
     }
 
 
@@ -89,6 +93,10 @@ const ListContract = () => {
                                                     onClick={e => {handleAnalize(row.id);}}
                                                     variant="contained" 
                                                     color="primary">Kérem az adatokat</Button></TableCell>
+                                                    <TableCell key={row.name}><Button 
+                                                    onClick={e => {handleDelete(row.id);}}
+                                                    variant="contained" 
+                                                    color="primary">Törlöm a szerződést</Button></TableCell>
                                             </TableRow>
                                         );
                                     })}
