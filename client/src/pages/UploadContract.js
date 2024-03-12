@@ -37,7 +37,6 @@ const UploadContract = () => {
     }
 
     function handleSave(event) {
-        //console.log(event);
         const formData = new FormData();
         formData.append('file', file);
 
