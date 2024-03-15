@@ -1,24 +1,18 @@
 package contract.genie.resourceserver
 
-import org.springframework.boot.ApplicationRunner
+import contract.genie.resourceserver.services.FileService
+import jakarta.annotation.Resource
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
 class ContractGenieApplication {
-	/*@Bean
-	fun run (repository: ContractRepository) = ApplicationRunner {
-		repository.save(ContractModel(
-			name = "Munkaszerződés"
-		))
-		repository.save(ContractModel(
-			name = "Adásvételi szerződés"
-		))
-		repository.save(ContractModel(
-			name = "Bérleti szerződés"
-		))
-	}*/
+	@Resource
+	lateinit var storageService: FileService
+
+	 fun run(vararg arg: String?) {
+		storageService.init()
+	}
 }
 
 fun main(args: Array<String>) {
