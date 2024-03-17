@@ -65,3 +65,18 @@
 .content {
   display: flex;
 }
+.paper-text {
+  padding: 10px;
+  background-color: 'secondary';
+}
+.horizontal-list{
+  display: 'flex';
+  flex-direction: 'row';
+  padding: 0;
+}
+.custom-divider {
+  margin: 10px 0px 10px 0px;
+}
+.custom-navigatiom{
+  margin-bottom: 10px;
+}

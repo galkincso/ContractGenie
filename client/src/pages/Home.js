@@ -1,145 +1,157 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import AdbIcon from '@mui/icons-material/Adb';
-
+import {Box, Divider, IconButton, Stack, Typography, Card, CardContent, CardActions, CardActionArea } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import axios from 'axios';
 
 const Home = () => {
 
     const navigate = useNavigate();
-    const pages = ['Szerződés készítése', 'Sablonok', 'Sablon felvétele'];
+    const [contracts, setContracts] = useState([]);
 
-    function handleClickList(event) {
-        navigate("/list");
-    }
-    function handleClickUpload(event) {
-        navigate("/upload");
-    }
-    function handleNavigation(page) {
-        console.log("Page: ", page);
-    }
-
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
-    };
-
-
+    useEffect(() => {
+        axios
+            .get('/contracts')
+            .then(response => setContracts(response.data))
+    }, [contracts])
 
     return (
         <>
-            <AppBar position="static">
-                <Container maxWidth="xl">
-                    <Toolbar disableGutters>
+            <div className='center-text'>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        '& > :not(style)': {
+                            m: 1,
+                            width: 1200,
+                            height: 200,
+                        },
+                        justifyContent: 'center',
+                    }}>
+                    <Paper
+                        elevation={3}>
+                        <Typography
+                            className='paper-text'
+                            variant="h5"
+                            noWrap
+                            sx={{
+                                letterSpacing: '.1rem',
+                                color: 'black',
+                                textDecoration: 'none',
+                            }}>
+                            Itt a szerződéskötés olyan élmény, mint sehol máshol!
+                        </Typography>
+                        <Divider variant="middle" />
+                        <Typography
+                            className='paper-text'
+                            variant="h6"
+                            sx={{
+                                letterSpacing: '.1rem',
+                                color: 'black',
+                                textDecoration: 'none',
+                            }}>
+                            Legyen szó bármilyen üzleti megállapodásról vagy jogi dokumentumról, nálunk minden szükséges eszköz és funkció kéznél van a gyors és hatékony kezeléshez.
+                        </Typography>
+                    </Paper>
+                </Box>
+            </div>
 
-                        {/* Keskeny*/}
-                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                            <IconButton
-                                size="large"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleOpenNavMenu}
-                                color="inherit">
-                                <MenuIcon />
-                            </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorElNav}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'left',
-                                }}
-                                open={Boolean(anchorElNav)}
-                                onClose={handleCloseNavMenu}
-                                sx={{
-                                    display: { xs: 'block', md: 'none' },
-                                }}>
-                                     <MenuItem key={'készít'} onClick={handleCloseNavMenu}>
-                                        <Typography textAlign="center">Szerződés készítése</Typography>
-                                    </MenuItem>
-                                    <MenuItem key={'list'} onClick={handleClickList}>
-                                        <Typography textAlign="center">Sablonok</Typography>
-                                    </MenuItem>
-                                    <MenuItem key={'upload'} onClick={handleClickUpload}>
-                                        <Typography textAlign="center">Sablon felvétele</Typography>
-                                    </MenuItem>
-                                {/*
-                                {pages.map((page) => (
-                                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                        <Typography textAlign="center">{page}</Typography>
-                                    </MenuItem>
-                                ))}
-                                */}
-                            </Menu>
-                        </Box>
+            <div className='center-text'>
+                <Stack direction="row" spacing={2}>
+                    {contracts.map((contract)=>(
+                        <Card variant="outlined" sx={{ maxWidth: 345 }}>
+                        <CardContent>
+                            <Typography variant="h5" component="div">
+                                {contract.name}
+                            </Typography>
+                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                3 sablon
+                            </Typography>
+                            <Typography variant="body2">
+                                Szükséges iratok:
+                                <br />
+                                személyi, lakcímkártya
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Button size="small">Kezdés</Button>
+                        </CardActions>
+                    </Card>
+                    ))}
+                </Stack>
+            </div>
 
-                        {/* Széles */}
-                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>                           
-                            <Button 
-                                sx={{ my: 2, color: 'black', display: 'block' }}
-                                key={'készít'}>Szerződés készítése</Button>
-                            <Button 
-                                onClick={handleClickList}
-                                sx={{ my: 2, color: 'black', display: 'block' }}
-                                key={'list'}>Sablonok</Button>
-                            <Button
-                                onClick={handleClickUpload}
-                                sx={{ my: 2, color: 'black', display: 'block' }} 
-                                key={'upload'}>Sablon felvétele</Button>
-                            {/*
-                            {pages.map((page) => (
-                                <Button
-                                    key={page}
-                                    onClick={handleNavigation(page)}
-                                    sx={{ my: 2, color: 'white', display: 'block' }}>
-                                    {page}
-                                </Button>
-                            ))}
-                            */}
-                        </Box>
+            <div className='center-text'>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        '& > :not(style)': {
+                            m: 1,
+                            width: 1200,
+                            height: 400,
+                        },
+                        justifyContent: 'center',
+                    }}>
+                    <Paper elevation={3}>
+                        <Typography
+                            className='paper-text'
+                            variant="h5"
+                            noWrap
+                            sx={{
+                                letterSpacing: '.1rem',
+                                color: 'black',
+                                textDecoration: 'none',
+                            }}>
+                            Szabd személyre, amennyire csak lehet!
+                        </Typography>
 
-                        {/* MINDIG */}
-                        <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Open settings">
-                                <IconButton sx={{ p: 0 }}>
-                                    <Typography
-                                        variant="h6"
-                                        noWrap
-                                        component="a"
-                                        sx={{
-                                            mr: 2,
-                                            fontFamily: 'monospace',
-                                            fontWeight: 700,
-                                            letterSpacing: '.3rem',
-                                            color: 'black',
-                                            textDecoration: 'none',
-                                        }}>
-                                        Contract Genie
-                                    </Typography>
-                                </IconButton>
-                            </Tooltip>
-                        </Box>
-                    </Toolbar>
-                </Container>
-            </AppBar>
+                        <Divider className='custom-divider' variant="middle" />
+
+                        <Stack direction="row" spacing={2}>
+                            <Card variant="outlined" sx={{ maxWidth: 345 }}>
+                                <IconButton><UploadFileIcon fontSize='large' /></IconButton>
+                                <CardActionArea>
+                                    <CardContent>
+                                        <Typography className='paper-text' variant="h5" component="div">
+                                            Töltsd fel kedvenc sablonod!
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Van egy jól bevált szerződés sablonod?
+                                            <br />
+                                            Töltsd fel és segíts másoknak is vele!
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+
+                            <Card variant="outlined" sx={{ maxWidth: 345 }}>
+                                <IconButton><BorderColorIcon fontSize='large' /></IconButton>
+                                <CardActionArea>
+                                    <CardContent>
+                                        <Typography className='paper-text' variant="h5" component="div">
+                                            Szabd személyre szerződésed!
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Hiányzik még 1 mondtad a sablonból?
+                                            <br />
+                                            Semmi gond.
+                                            <br />
+                                            A sablon kiválasztása után lehetőséged van szerkeszteni a tartalmát!
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+
+                        </Stack>
+                    </Paper>
+                </Box>
+            </div>
+
 
             {/*
             <div className='options'>
