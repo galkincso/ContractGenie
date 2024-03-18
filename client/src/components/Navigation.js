@@ -114,10 +114,9 @@ const Navigation = () => {
                         {/* MINDIG */}
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
-                                <IconButton sx={{ p: 0 }}>
+                                <IconButton onClick={handleClickHome} sx={{ p: 0 }}>
                                     <Typography
                                         variant="h6"
-                                        onClick={handleClickHome}
                                         noWrap
                                         component="a"
                                         sx={{
