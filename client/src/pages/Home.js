@@ -61,9 +61,9 @@ const Home = () => {
             </div>
 
             <div className='center-text'>
-                <Stack direction="row" spacing={2}>
+                <Stack className='custom-stack' direction="row" spacing={2}>
                     {contracts.map((contract)=>(
-                        <Card variant="outlined" sx={{ maxWidth: 345 }}>
+                        <Card className='custom-card' variant="outlined" sx={{ maxWidth: 345 }}>
                         <CardContent>
                             <Typography variant="h5" component="div">
                                 {contract.name}
@@ -112,7 +112,7 @@ const Home = () => {
 
                         <Divider className='custom-divider' variant="middle" />
 
-                        <Stack direction="row" spacing={2}>
+                        <Stack className='custom-stack' direction="row" spacing={3}>
                             <Card variant="outlined" sx={{ maxWidth: 345 }}>
                                 <IconButton><UploadFileIcon fontSize='large' /></IconButton>
                                 <CardActionArea>

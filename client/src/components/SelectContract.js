@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from 'reactstrap';
 
-const SelectContract = () => {
+const SelectContract = (props) => {
 
     const navigate = useNavigate();
     const [contracts, setContracts] = useState([]);
@@ -12,14 +12,12 @@ const SelectContract = () => {
     useEffect(() => {
         axios
             .get('/contract/getall')
-            .then(response => {
-                console.log(response);
-                setContracts(response.data);
-            })
+            .then(response => setContracts(response.data))
     }, [])
 
-    function handleClick () {
-        
+    function handleClick (id) {
+        console.log(id);
+        //props.function('PersonalData');
     }
 
     return (
@@ -36,7 +34,7 @@ const SelectContract = () => {
                 {contracts.map((contract) => (
                     <Grid key={contract.id} item xs={4}>
                         <Card  variant="outlined" sx={{ maxWidth: 400 }}>
-                            <CardActionArea onClick={handleClick}>
+                            <CardActionArea onClick={handleClick(contract.id)}>
                                 <CardContent>
                                     <Typography className='paper-text' variant="h5" component="div">
                                         {contract.name}
