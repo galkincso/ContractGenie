@@ -164,3 +164,18 @@ const Home = () => {
 
 };
 export default Home;
+
+/**
+ * TO DO:
+ * 
+ * Personal Data oldal
+ * Statikus design
+ * Backend szerinti design
+ * ocr
+ * 
+ * Tartalmi oldal
+ * Statikus design
+ * Backend szerinti design
+ * 
+ * Szerződés generálása
+*/

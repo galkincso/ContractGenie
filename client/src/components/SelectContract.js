@@ -16,8 +16,12 @@ const SelectContract = (props) => {
     }, [])
 
     function handleClick (id) {
-        console.log(id);
-        //props.function('PersonalData');
+        for (var c in contracts) {
+            if (contracts[c].id === id) {
+                props.setContract(contracts[c]);
+            }
+        }
+        props.setFlow('PersonalData');
     }
 
     return (
@@ -34,7 +38,7 @@ const SelectContract = (props) => {
                 {contracts.map((contract) => (
                     <Grid key={contract.id} item xs={4}>
                         <Card  variant="outlined" sx={{ maxWidth: 400 }}>
-                            <CardActionArea onClick={handleClick(contract.id)}>
+                            <CardActionArea onClick={() => handleClick(contract.id)}>
                                 <CardContent>
                                     <Typography className='paper-text' variant="h5" component="div">
                                         {contract.name}
