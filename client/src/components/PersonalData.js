@@ -20,7 +20,7 @@ const PersonalData = (props) => {
                 <TableRow key={i+"adó"} >
                     <TableCell align="left">Adóigazolvány</TableCell>
                     <TableCell align="right">
-                        <TextField onChange={handleUpload} type='file' id="standard-basic" label="Standard" variant="standard" />
+                        <TextField onChange={handleUpload} type='file' id="standard-basic" label="Adóigazolvány" variant="standard" />
                     </TableCell>
                 </TableRow> )             
                 break;
@@ -35,14 +35,14 @@ const PersonalData = (props) => {
                     <TableRow key={i+"adó"} >
                         <TableCell align="left">Alany {i+1} Adóigazolvány</TableCell>
                         <TableCell align="right">
-                            <TextField onChange={handleUpload} type='file' id="standard-basic" label="Standard" variant="standard" />
+                            <TextField onChange={handleUpload} type='file' id="standard-basic" label="Adóigazolvány" variant="standard" />
                         </TableCell>
                     </TableRow> )  
                 tableRows.push(
                     <TableRow key={i+"lakcím"} >
                         <TableCell align="left">Alany {i+1} Lakcímkártya</TableCell>
                         <TableCell align="right">
-                            <TextField onChange={handleUpload} type='file' id="standard-basic" label="Standard" variant="standard" />
+                            <TextField onChange={handleUpload} type='file' id="standard-basic" label="Lakcímkártya" variant="standard" />
                         </TableCell>
                     </TableRow> )  
                 break;
@@ -64,6 +64,7 @@ function handleClick() {
     props.setFlow('ContentModifier');
 }
 function handleUpload() {
+    console.log("Fájlfeltöltés");
 }
 
 return (
@@ -102,7 +103,6 @@ return (
 
             </div>
         </form>
-
 
     </>
 )
