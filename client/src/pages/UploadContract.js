@@ -62,8 +62,6 @@ const UploadContract = () => {
             })
     }
 
-
-
     return (
         <>
             <div className='header'>

@@ -14,9 +14,13 @@ const Home = () => {
 
     useEffect(() => {
         axios
-            .get('/contracts')
+            .get('/contract/getall')
             .then(response => setContracts(response.data))
     }, [contracts])
+
+    function handleClick (id) {
+        navigate('/create/' + id);
+    }
 
     return (
         <>
@@ -78,7 +82,7 @@ const Home = () => {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small">Kezdés</Button>
+                            <Button onClick={e => handleClick(contract.id)} size="small">Kezdés</Button>
                         </CardActions>
                     </Card>
                     ))}

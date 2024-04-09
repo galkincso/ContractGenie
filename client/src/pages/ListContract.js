@@ -25,7 +25,7 @@ const ListContract = () => {
 
     useEffect(() => {
         axios
-            .get('/contracts')
+            .get('/contract/getall')
             .then(response => setContracts(response.data))
     }, [contracts])
 

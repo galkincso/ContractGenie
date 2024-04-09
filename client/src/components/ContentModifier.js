@@ -2,16 +2,31 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DoneIcon from '@mui/icons-material/Done';
+import TextareaAutosize from 'react-textarea-autosize';
+import PDFfile from './PDFfile';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const ContentModifier = (props) => {
+
+const ContentModifier = () => {
     const [content, setContent] = useState('');
+    const [contract, setContract] = useState('');
+    let { id } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        formatText(props.contract.content);
+        axios
+        .get('/contract/get/'+ {id}.id)
+        .then(response => {
+            formatText(response.data.content);
+            setContract(response.data);
+        })
+        
     }, [])
 
     function handleBack() {
-        props.setFlow('PersonalData');
+       navigate(-1);
     }
     function handleClick() {
         console.log("Kinyerve: ", content);
@@ -40,9 +55,8 @@ const ContentModifier = (props) => {
                 </Box>
             </div>
 
-
             <div className='center-text'>
-                <textarea onChange={e => setContent(e.target.value)} defaultValue={content} className='custom-textarea' />
+                <TextareaAutosize type="text" className='custom-textarea' onChange={e => setContent(e.target.value)} defaultValue={content} />
             </div>
 
             <div className='btnBack options'>
@@ -50,11 +64,14 @@ const ContentModifier = (props) => {
                     onClick={handleBack}
                     variant="contained" size='large'
                     startIcon={<ArrowBackIcon />}>Vissza</Button>
-                <Button
-                    onClick={handleClick}
-                    variant="contained" size='large'
-                    startIcon={<DoneIcon />}>Tovább
-                </Button>
+                
+                <PDFDownloadLink document={<PDFfile name={contract.name} content={content}/>} fileName='szerződés'>
+                    {({loading}) => (loading ? <Button>Loading document..</Button> : 
+                    <Button
+                        variant="contained" size='large'
+                        startIcon={<DoneIcon />}>PDF letöltése
+                    </Button>)}
+                </PDFDownloadLink>
 
             </div>
         </>

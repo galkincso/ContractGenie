@@ -16,12 +16,7 @@ const SelectContract = (props) => {
     }, [])
 
     function handleClick (id) {
-        for (var c in contracts) {
-            if (contracts[c].id === id) {
-                props.setContract(contracts[c]);
-            }
-        }
-        props.setFlow('PersonalData');
+        navigate('/create/'+id);
     }
 
     return (
