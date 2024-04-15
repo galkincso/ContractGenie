@@ -11,6 +11,7 @@ import { createWorker } from 'tesseract.js';
 const PersonalData = () => {
 
     const [file, setFile] = useState([]);
+    const [ocrData, setOcrData] = useState([]);
     const [fileData, setFileData] = useState('');
     let { id } = useParams();
     const [contract, setContract] = useState('');
@@ -32,6 +33,7 @@ const PersonalData = () => {
         const ret = await worker.recognize(toConvertImage);
         console.log(ret.data.text);
         setFileData(ret.data.text);
+        setOcrData([...ocrData, ret.data.text]);
         await worker.terminate();
 
         //console.log(fileData);
@@ -64,6 +66,8 @@ const PersonalData = () => {
     function handleClick() {
         // itt kellene meghívni egy olyan függvényt, amelyik egy ciklusban beadja a fotókat az ai-nak, majd a szükséges datokat elmenti egy változóba
         // jelenleg handleUpload utolsó komment sora hívja
+        console.log("ocrData: ", ocrData);
+
         navigate('/create/' + { id }.id + '/content');
     }
     function handleUpload(event) {
@@ -72,6 +76,22 @@ const PersonalData = () => {
         //console.log("files: ", file);
         convertImageToText(event.target.files[0]);
     }
+
+    //const qna = require('@tensorflow-models/qna');
+
+    const handleAnswear = async () => {
+        var question = ocrData[0];
+        var passage = "Mi a bejelentési idő?"
+        
+        //const model = await qna.load();
+        //const answers = await model.findAnswers(question, passage);
+
+        console.log('Answers: ');
+        //console.log(answers);
+    }
+
+
+
 
     return (
         <>
@@ -104,6 +124,11 @@ const PersonalData = () => {
                         onClick={handleClick}
                         variant="contained" size='large'
                         startIcon={<DoneIcon />}>Tovább
+                    </Button>
+                    <Button
+                        onClick={handleAnswear}
+                        variant="contained" size='large'
+                        startIcon={<DoneIcon />}>Kérdések
                     </Button>
                 </div>
             </form>

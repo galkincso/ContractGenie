@@ -36,6 +36,31 @@ const styles = StyleSheet.create({
 
 const date = new Date().toJSON().slice(0, 10);
 
+function createNamingConventions (props) {
+    if (props.name === undefined) {
+        return;
+    } else {
+        var table = [];
+        for (let i = 0; i < props.subjectNames.length; i++) {
+            table.push(
+                <Text style={styles.text}>{props.subjectNames[i]} aláírása: _____________________ Dátum: {date} </Text>
+            );
+        }
+        return table;
+    }
+}
+function createHeader (props) {
+    if (props.name !== undefined) {
+        var table = [];
+        for (let i = 0; i < props.subjectNames.length; i++) {
+            table.push(
+                <Text style={styles.text}>{props.subjectNames[i]} </Text>
+            );
+        }
+        return table;
+    }
+}
+
 
 const PDFfile = (props) => (
     <Document>
@@ -43,10 +68,10 @@ const PDFfile = (props) => (
             <Text style={styles.header}>Contract Genie</Text>
             <Text style={styles.title}>{props.name}</Text>
             <Text style={styles.text}>1. Felek:</Text>
+            {createHeader(props)}
             <Text style={styles.text}>{props.content}</Text>
             <Text style={styles.text}>A felek aláírása előtt az alábbiak szerint került aláírásra és elfogadásra a jelen szerződés. </Text>
-            <Text style={styles.text}>{props.subjectNames} aláírása: ____________________ Dátum: {date} </Text>
-            <Text style={styles.text}>{props.subjectNames} aláírása: _____________________ Dátum: {date} </Text>
+            {createNamingConventions(props)}
             <Text
                 style={styles.pageNumber}
                 render={({ pageNumber, totalPages }) =>
@@ -61,6 +86,9 @@ export default PDFfile;
 {props.namingConventions.map((name) => (
                     <Text style={styles.text}>{name} aláírása: ____________________ Dátum: {date} </Text>
                 ))}
+
+                <Text style={styles.text}>{props.subjectNames} aláírása: ____________________ Dátum: {date} </Text>
+            <Text style={styles.text}>{props.subjectNames} aláírása: _____________________ Dátum: {date} </Text>
 */
 
            
