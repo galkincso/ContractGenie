@@ -21,7 +21,7 @@ const ContentModifier = () => {
         .then(response => {
             formatText(response.data.content);
             setContract(response.data);
-        })
+            })
         
     }, [])
 
@@ -65,12 +65,11 @@ const ContentModifier = () => {
                     variant="contained" size='large'
                     startIcon={<ArrowBackIcon />}>Vissza</Button>
                 
-                <PDFDownloadLink document={<PDFfile name={contract.name} content={content}/>} fileName='szerződés'>
-                    {({loading}) => (loading ? <Button>Loading document..</Button> : 
+                <PDFDownloadLink document={<PDFfile name={contract.name} content={content} subjectNames={contract.namingConvention}/>} fileName='szerződés'>
                     <Button
                         variant="contained" size='large'
                         startIcon={<DoneIcon />}>PDF letöltése
-                    </Button>)}
+                    </Button>
                 </PDFDownloadLink>
 
             </div>

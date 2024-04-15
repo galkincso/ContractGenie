@@ -35,11 +35,6 @@ const styles = StyleSheet.create({
 });
 
 const date = new Date().toJSON().slice(0, 10);
-const subjects = 
-
-function formatDate() {
-
-}
 
 
 const PDFfile = (props) => (
@@ -47,10 +42,11 @@ const PDFfile = (props) => (
         <Page size="A4" style={styles.body}>
             <Text style={styles.header}>Contract Genie</Text>
             <Text style={styles.title}>{props.name}</Text>
+            <Text style={styles.text}>1. Felek:</Text>
             <Text style={styles.text}>{props.content}</Text>
             <Text style={styles.text}>A felek aláírása előtt az alábbiak szerint került aláírásra és elfogadásra a jelen szerződés. </Text>
-            <Text style={styles.text}>Szolgáltató aláírása: ____________________ Dátum: {date} </Text>
-            <Text style={styles.text}> Megrendelő aláírása: _____________________ Dátum: {date} </Text>
+            <Text style={styles.text}>{props.subjectNames} aláírása: ____________________ Dátum: {date} </Text>
+            <Text style={styles.text}>{props.subjectNames} aláírása: _____________________ Dátum: {date} </Text>
             <Text
                 style={styles.pageNumber}
                 render={({ pageNumber, totalPages }) =>
@@ -60,5 +56,11 @@ const PDFfile = (props) => (
     </Document>
 );
 export default PDFfile;
+
+/*
+{props.namingConventions.map((name) => (
+                    <Text style={styles.text}>{name} aláírása: ____________________ Dátum: {date} </Text>
+                ))}
+*/
 
            

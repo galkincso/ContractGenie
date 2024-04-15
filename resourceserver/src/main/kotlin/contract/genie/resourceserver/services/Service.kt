@@ -24,7 +24,8 @@ class Service (val db: Repository) {
                     content = contract.content,
                     summary = contract.summary,
                     subjects = contract.subjects,
-                    documentId = contract.documentId))
+                    documents = contract.documents,
+            namingConvention = contract.namingConvention))
             return
         }
     }

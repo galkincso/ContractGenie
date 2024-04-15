@@ -12,7 +12,8 @@ data class Contract (
     val content: String,
     val summary: String,
     val subjects: Int,
-    val documentId: Int
+    val documents: Array<String>,
+    val namingConvention: Array<String>
 )
 /*
 * id -> szerződés azonosítója
