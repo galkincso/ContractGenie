@@ -1,4 +1,4 @@
-import { Box, Button, Paper, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from '@mui/material';
+import { Box, Button, Input, Paper, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -23,24 +23,28 @@ const PersonalData = () => {
             .then(response => setContract(response.data))
     }, [])
 
+    async function query(data) {
+        const response = await fetch(
+            "https://api-inference.huggingface.co/models/mcsabai/huBert-fine-tuned-hungarian-squadv2",
+            {
+                headers: { Authorization: "Bearer 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" },
+                method: "POST",
+                body: JSON.stringify(data),
+            }
+        );
+        const result = await response.json();
+        return result;
+    }
 
     const worker = createWorker();
 
     const convertImageToText = async (toConvertImage) => {
-        console.log("image ", toConvertImage);
         const worker = await createWorker('hun');
-        console.log("utána ", toConvertImage);
         const ret = await worker.recognize(toConvertImage);
         console.log(ret.data.text);
         setFileData(ret.data.text);
-        setOcrData([...ocrData, ret.data.text]);
+        await setOcrData([...ocrData, ret.data.text]);
         await worker.terminate();
-
-        //console.log(fileData);
-        //await worker.loadLanguage("hun");
-        //await worker.initialize("hun");
-        //const {data} = await worker.recognize(photo);
-        //console.log(data);
     }
 
     function createTable() {
@@ -48,7 +52,7 @@ const PersonalData = () => {
         for (let i = 0; i < contract.subjects; i++) {
             for (let k = 0; k < contract.documents.length; k++) {
                 table.push(
-                    <TableRow key={contract.id + contract.documents[k]} >
+                    <TableRow key={contract.id + i + k} >
                         <TableCell align="left">{contract.namingConvention[i]}: {contract.documents[k]}</TableCell>
                         <TableCell align="right">
                             <TextField onChange={handleUpload} type='file' id="standard-basic" label={contract.documents[k]} variant="standard" />
@@ -67,6 +71,16 @@ const PersonalData = () => {
         // itt kellene meghívni egy olyan függvényt, amelyik egy ciklusban beadja a fotókat az ai-nak, majd a szükséges datokat elmenti egy változóba
         // jelenleg handleUpload utolsó komment sora hívja
         console.log("ocrData: ", ocrData);
+        for (let i = 0; i < ocrData.length; i++) {
+            query({
+                "inputs": {
+                    "question": "Név?",
+                    "context": ocrData[i]
+                }
+            }).then((response) => {
+                console.log(JSON.stringify(response));
+            });
+        }
 
         navigate('/create/' + { id }.id + '/content');
     }
@@ -80,14 +94,15 @@ const PersonalData = () => {
     //const qna = require('@tensorflow-models/qna');
 
     const handleAnswear = async () => {
-        var question = ocrData[0];
-        var passage = "Mi a bejelentési idő?"
-        
-        //const model = await qna.load();
-        //const answers = await model.findAnswers(question, passage);
-
-        console.log('Answers: ');
-        //console.log(answers);
+        console.log("OCR Data: ", ocrData);
+        query({
+            "inputs": {
+                "question": "Melyik folyó szeli ketté Budapestet?",
+                "context": "Magyarország fővárosát, Budapestet a Duna folyó szeli ketté. A XIX. században épült Lánchíd a dimbes-dombos budai oldalt köti össze a sík Pesttel. A Várdomb oldalában futó siklóval juthatunk fel a budai Óvárosba, ahol a Budapesti Történeti Múzeum egészen a római időkig visszavezetve mutatja be a városi életet. A Szentháromság tér ad otthont a XIII. századi Mátyás-templomnak és a Halászbástya lőtornyainak, amelyekből messzire ellátva gyönyörködhetünk a városban."
+            }
+        }).then((response) => {
+            console.log(JSON.stringify(response));
+        });
     }
 
 

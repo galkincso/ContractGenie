@@ -1,7 +1,6 @@
 package contract.genie.resourceserver.models
 
 import jakarta.persistence.*
-import java.awt.TextArea
 
 @Entity
 @Table(name = "contract")
@@ -20,11 +19,6 @@ data class Contract (
 * name -> szerződés neve
 * content -> szerződés tartalma
 * subjects -> hány alanya van a szerződésnek: 1 vagy 2
-* documentId -> milyen okmányok szükségesek a szerződéshez
-*   1 -> adóigazolvány
-*   2 -> lakcímkártya
-*   3 -> személyi igazolvány
-*   4 -> adóigazolvány + lakcímkártya
-*   5 -> adóigazolvány + személyi igazolvány
-*   6 -> lakcímkártya + személyi igazolvány
+* documents -> milyen okmányok szükségesek a szerződéshez
+* namingConvention -> megszólítások a szerződésben
 * */
