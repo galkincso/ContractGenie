@@ -12,6 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 const ContentModifier = () => {
     const [content, setContent] = useState('');
     const [contract, setContract] = useState('');
+    const [personalData, setPersonalData] = useState([]);
     let { id } = useParams();
     const navigate = useNavigate();
 
@@ -23,13 +24,16 @@ const ContentModifier = () => {
             setContract(response.data);
             })
         
+        const items = JSON.parse(localStorage.getItem('items'));
+        if (items) setPersonalData(items);  
+        console.log("Items: ", items);      
     }, [])
 
     function handleBack() {
        navigate(-1);
     }
     function handleClick() {
-        console.log("Kinyerve: ", content);
+        console.log("Adat: ", personalData[0]);
     }
     function formatText(text) {
         var formattedText = '';
@@ -71,7 +75,6 @@ const ContentModifier = () => {
                         startIcon={<DoneIcon />}>PDF letöltése
                     </Button>
                 </PDFDownloadLink>
-
             </div>
         </>
     )

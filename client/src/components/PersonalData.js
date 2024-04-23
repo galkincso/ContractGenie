@@ -12,10 +12,10 @@ const PersonalData = () => {
 
     const [file, setFile] = useState([]);
     const [ocrData, setOcrData] = useState([]);
-    const [fileData, setFileData] = useState('');
     let { id } = useParams();
     const [contract, setContract] = useState('');
     const navigate = useNavigate();
+    const [personalData, setPersonalData] = useState([]);
 
     useEffect(() => {
         axios
@@ -23,28 +23,15 @@ const PersonalData = () => {
             .then(response => setContract(response.data))
     }, [])
 
-    async function query(data) {
-        const response = await fetch(
-            "https://api-inference.huggingface.co/models/mcsabai/huBert-fine-tuned-hungarian-squadv2",
-            {
-                headers: { Authorization: "Bearer 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" },
-                method: "POST",
-                body: JSON.stringify(data),
-            }
-        );
-        const result = await response.json();
-        return result;
-    }
-
     const worker = createWorker();
 
     const convertImageToText = async (toConvertImage) => {
         const worker = await createWorker('hun');
         const ret = await worker.recognize(toConvertImage);
         console.log(ret.data.text);
-        setFileData(ret.data.text);
         await setOcrData([...ocrData, ret.data.text]);
         await worker.terminate();
+        return ret.data.text;
     }
 
     function createTable() {
@@ -55,7 +42,7 @@ const PersonalData = () => {
                     <TableRow key={contract.id + i + k} >
                         <TableCell align="left">{contract.namingConvention[i]}: {contract.documents[k]}</TableCell>
                         <TableCell align="right">
-                            <TextField onChange={handleUpload} type='file' id="standard-basic" label={contract.documents[k]} variant="standard" />
+                            <TextField onChange={(e) => handleUpload(e, contract.namingConvention[i], contract.documents[k])} type='file' id="standard-basic" label={contract.documents[k]} variant="standard" />
                         </TableCell>
                     </TableRow>)
             }
@@ -63,15 +50,28 @@ const PersonalData = () => {
         return table;
     }
 
-
     function handleBack() {
         navigate(-1);
     }
-    function handleClick() {
+
+    async function query(data) {
+        const response = await fetch(
+            "https://api-inference.huggingface.co/models/mcsabai/huBert-fine-tuned-hungarian-squadv2",
+            {
+                headers: { Authorization: "Bearer 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" },
+                method: "POST",
+                body: JSON.stringify(data),
+            }
+        );
+        const result = await response.json();
+        return result;
+    }
+
+    const handleClick = async () => {
         // itt kellene meghívni egy olyan függvényt, amelyik egy ciklusban beadja a fotókat az ai-nak, majd a szükséges datokat elmenti egy változóba
         // jelenleg handleUpload utolsó komment sora hívja
-        console.log("ocrData: ", ocrData);
-        for (let i = 0; i < ocrData.length; i++) {
+        //console.log("ocrData: ", ocrData);
+        /*for (let i = 0; i < ocrData.length; i++) {
             query({
                 "inputs": {
                     "question": "Név?",
@@ -80,19 +80,77 @@ const PersonalData = () => {
             }).then((response) => {
                 console.log(JSON.stringify(response));
             });
-        }
-
+        }*/
+        console.log("átadva: ", personalData);
+        await localStorage.setItem('items', JSON.stringify(personalData));
         navigate('/create/' + { id }.id + '/content');
+        
     }
-    function handleUpload(event) {
+    
+    const handleUpload = async (event, namingConv, document) => {
+        /* Feltöltődik a kép */
         setFile([...file, event.target.files[0]]);
 
-        //console.log("files: ", file);
-        convertImageToText(event.target.files[0]);
+        /* OCR -> képből szöveg */
+        var text = await convertImageToText(event.target.files[0]);
+        //console.log("Text: ", text);
+
+        /* QA -> szövegből adatok */
+        var name;
+        var answer;
+        switch (document) {
+            case "Lakcímkártya":
+                // Név
+                name = await query({
+                    "inputs": {
+                        "question": "Név?",
+                        "context": text
+                    }
+                });
+                // Lakóhely
+                answer = await query({
+                    "inputs": {
+                        "question": "Lakóhely?",
+                        "context": text
+                    }
+                });
+                break;
+            case "Adóigazolvány":
+                // Adószám
+                answer = await query({
+                    "inputs": {
+                        "question": "Adószám?",
+                        "context": text
+                    }
+                });
+                break;
+            case "Személyi igazolvány":
+                // Személyi igazolvány szám
+                answer = await query({
+                    "inputs": {
+                        "question": "Személyi igazolvány szám?",
+                        "context": text
+                    }
+                });
+                break;
+            default:
+                // Hibakezelés
+                break;
+        }
+
+        //console.log("answer: ", answer.answer);
+        const data = {
+            "namingConvention": namingConv,
+            "name": name.answer,
+            "info": answer.answer
+        }
+        setPersonalData([...personalData, data]);
+        //console.log("JSON ", data);
+
     }
 
     //const qna = require('@tensorflow-models/qna');
-
+    /*
     const handleAnswear = async () => {
         console.log("OCR Data: ", ocrData);
         query({
@@ -104,8 +162,7 @@ const PersonalData = () => {
             console.log(JSON.stringify(response));
         });
     }
-
-
+    */
 
 
     return (
@@ -139,11 +196,6 @@ const PersonalData = () => {
                         onClick={handleClick}
                         variant="contained" size='large'
                         startIcon={<DoneIcon />}>Tovább
-                    </Button>
-                    <Button
-                        onClick={handleAnswear}
-                        variant="contained" size='large'
-                        startIcon={<DoneIcon />}>Kérdések
                     </Button>
                 </div>
             </form>
