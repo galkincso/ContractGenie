@@ -16,7 +16,7 @@ const Home = () => {
         axios
             .get('/contract/getall')
             .then(response => setContracts(response.data))
-    }, [contracts])
+    }, [])
 
     function handleClick (id) {
         navigate('/create/' + id);

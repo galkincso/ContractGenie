@@ -179,6 +179,7 @@ const PersonalData = () => {
                         variant="contained" size='large'
                         startIcon={<ArrowBackIcon />}>Vissza</Button>
                     <Button
+                        disabled={contract.subjects*contract.documents?.length !== personalData?.length}
                         onClick={handleClick}
                         variant="contained" size='large'
                         startIcon={<DoneIcon />}>Tovább

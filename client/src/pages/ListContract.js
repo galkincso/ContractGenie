@@ -27,7 +27,7 @@ const ListContract = () => {
         axios
             .get('/contract/getall')
             .then(response => setContracts(response.data))
-    }, [contracts])
+    }, [])
 
     const columns = [
         { id: 'name', label: 'Név' },

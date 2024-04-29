@@ -12,22 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 const ContentModifier = () => {
     const [content, setContent] = useState('');
     const [contract, setContract] = useState('');
-    const [personalData, setPersonalData] = useState([
-        {
-          namingConvention: "Bérbeadó",
-          name: "GÁL KINCSŐ DÓRA",
-          info: "2022 TAHITÓTFALU"
-        },
-        {
-          namingConvention: "Bérbeadó",
-          info: "9493783218"
-        },
-        {
-          namingConvention: "Bérlő",
-          name: "TESZT Elek",
-          info: "1162 Buadpest"
-        }
-      ]);
+    const [personalData, setPersonalData] = useState([]);
     let { id } = useParams();
     const navigate = useNavigate();
 
@@ -38,11 +23,11 @@ const ContentModifier = () => {
             formatText(response.data.content);
             setContract(response.data);
             })
-        /*
+        
         const items = JSON.parse(localStorage.getItem('items'));
         if (items) setPersonalData(items);  
         console.log("Items: ", items);    
-        */
+        
 
     }, [])
 
@@ -97,3 +82,20 @@ const ContentModifier = () => {
     )
 };
 export default ContentModifier;
+
+/**
+ * {
+          namingConvention: "Bérbeadó",
+          name: "GÁL KINCSŐ DÓRA",
+          info: "2022 TAHITÓTFALU"
+        },
+        {
+          namingConvention: "Bérbeadó",
+          info: "9493783218"
+        },
+        {
+          namingConvention: "Bérlő",
+          name: "TESZT Elek",
+          info: "1162 Buadpest"
+        }
+ */
