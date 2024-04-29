@@ -56,7 +56,7 @@
 }
 .center-text {
   text-align: center;
-  margin-bottom: 50px;
+  margin: 20px 0px 50px 0px;
 }
 .btnBack {
   display: flex;
@@ -64,4 +64,31 @@
 }
 .content {
   display: flex;
+}
+.paper-text {
+  padding: 20px;
+  background-color: 'secondary';
+}
+.horizontal-list {
+  display: 'flex';
+  flex-direction: 'row';
+  padding: 0;
+}
+.custom-divider {
+  margin: 10px 0px 10px 0px;
+}
+.custom-navigatiom{
+  margin-bottom: 10px;
+}
+.custom-grid {
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.custom-stack {
+  margin: 0px 20px 0px 20px;
+}
+.custom-textarea{
+  width: 80%;
+  padding: 10px;
+  height: auto;
 }

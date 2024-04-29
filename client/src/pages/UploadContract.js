@@ -14,8 +14,6 @@ import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
-
 
 const UploadContract = () => {
 
@@ -63,8 +61,6 @@ const UploadContract = () => {
                 }
             })
     }
-
-
 
     return (
         <>
