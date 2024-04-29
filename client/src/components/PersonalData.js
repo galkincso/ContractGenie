@@ -93,11 +93,11 @@ const PersonalData = () => {
 
         /* OCR -> képből szöveg */
         var text = await convertImageToText(event.target.files[0]);
-        //console.log("Text: ", text);
 
         /* QA -> szövegből adatok */
         var name;
         var answer;
+        var data;
         switch (document) {
             case "Lakcímkártya":
                 // Név
@@ -114,15 +114,24 @@ const PersonalData = () => {
                         "context": text
                     }
                 });
+                data = {
+                    "namingConvention": namingConv,
+                    "name": name.answer,
+                    "info": answer.answer
+                }
                 break;
             case "Adóigazolvány":
                 // Adószám
                 answer = await query({
                     "inputs": {
-                        "question": "Adószám?",
+                        "question": "ADÓAZONOSÍTÓ JEL?",
                         "context": text
                     }
                 });
+                data = {
+                    "namingConvention": namingConv,
+                    "info": answer.answer
+                }
                 break;
             case "Személyi igazolvány":
                 // Személyi igazolvány szám
@@ -137,33 +146,10 @@ const PersonalData = () => {
                 // Hibakezelés
                 break;
         }
-
-        //console.log("answer: ", answer.answer);
-        const data = {
-            "namingConvention": namingConv,
-            "name": name.answer,
-            "info": answer.answer
-        }
+  
         setPersonalData([...personalData, data]);
-        //console.log("JSON ", data);
-
-    }
-
-    //const qna = require('@tensorflow-models/qna');
-    /*
-    const handleAnswear = async () => {
-        console.log("OCR Data: ", ocrData);
-        query({
-            "inputs": {
-                "question": "Melyik folyó szeli ketté Budapestet?",
-                "context": "Magyarország fővárosát, Budapestet a Duna folyó szeli ketté. A XIX. században épült Lánchíd a dimbes-dombos budai oldalt köti össze a sík Pesttel. A Várdomb oldalában futó siklóval juthatunk fel a budai Óvárosba, ahol a Budapesti Történeti Múzeum egészen a római időkig visszavezetve mutatja be a városi életet. A Szentháromság tér ad otthont a XIII. századi Mátyás-templomnak és a Halászbástya lőtornyainak, amelyekből messzire ellátva gyönyörködhetünk a városban."
-            }
-        }).then((response) => {
-            console.log(JSON.stringify(response));
-        });
-    }
-    */
-
+        
+    }    
 
     return (
         <>
@@ -204,3 +190,17 @@ const PersonalData = () => {
     )
 };
 export default PersonalData;
+
+/*
+    const handleAnswear = async () => {
+        console.log("OCR Data: ", ocrData);
+        query({
+            "inputs": {
+                "question": "Melyik folyó szeli ketté Budapestet?",
+                "context": "Magyarország fővárosát, Budapestet a Duna folyó szeli ketté. A XIX. században épült Lánchíd a dimbes-dombos budai oldalt köti össze a sík Pesttel. A Várdomb oldalában futó siklóval juthatunk fel a budai Óvárosba, ahol a Budapesti Történeti Múzeum egészen a római időkig visszavezetve mutatja be a városi életet. A Szentháromság tér ad otthont a XIII. századi Mátyás-templomnak és a Halászbástya lőtornyainak, amelyekből messzire ellátva gyönyörködhetünk a városban."
+            }
+        }).then((response) => {
+            console.log(JSON.stringify(response));
+        });
+    }
+    */

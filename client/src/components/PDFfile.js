@@ -31,12 +31,17 @@ const styles = StyleSheet.create({
         right: 0,
         textAlign: "center",
         color: "grey"
+    },
+    felek: {
+        marginLeft: 10,
+        fontSize: 14,
+        textAlign: "justify"
     }
 });
 
 const date = new Date().toJSON().slice(0, 10);
 
-function createNamingConventions (props) {
+function createNamingConventions(props) {
     if (props.name === undefined) {
         return;
     } else {
@@ -49,13 +54,25 @@ function createNamingConventions (props) {
         return table;
     }
 }
-function createHeader (props) {
+function createHeader(props) {
     if (props.name !== undefined) {
         var table = [];
         for (let i = 0; i < props.subjectNames.length; i++) {
             table.push(
-                <Text style={styles.text}>{props.subjectNames[i]} </Text>
+                <Text style={styles.text}>{props.subjectNames[i]}:</Text>
             );
+            for (let j = 0; j < props.data.length; j++) {
+                if (props.data[j].namingConvention === props.subjectNames[i]) {
+                    if (Object.keys(props.data[j]).length === 3) {
+                        table.push(
+                            <Text style={styles.felek}>{props.data[j].name}</Text>
+                        );
+                    }
+                    table.push(
+                        <Text style={styles.felek}>{props.data[j].info} </Text>
+                    );
+                }
+            }
         }
         return table;
     }
@@ -91,4 +108,3 @@ export default PDFfile;
             <Text style={styles.text}>{props.subjectNames} aláírása: _____________________ Dátum: {date} </Text>
 */
 
-           

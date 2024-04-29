@@ -12,7 +12,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 const ContentModifier = () => {
     const [content, setContent] = useState('');
     const [contract, setContract] = useState('');
-    const [personalData, setPersonalData] = useState([]);
+    const [personalData, setPersonalData] = useState([
+        {
+          namingConvention: "Bérbeadó",
+          name: "GÁL KINCSŐ DÓRA",
+          info: "2022 TAHITÓTFALU"
+        },
+        {
+          namingConvention: "Bérbeadó",
+          info: "9493783218"
+        },
+        {
+          namingConvention: "Bérlő",
+          name: "TESZT Elek",
+          info: "1162 Buadpest"
+        }
+      ]);
     let { id } = useParams();
     const navigate = useNavigate();
 
@@ -23,10 +38,12 @@ const ContentModifier = () => {
             formatText(response.data.content);
             setContract(response.data);
             })
-        
+        /*
         const items = JSON.parse(localStorage.getItem('items'));
         if (items) setPersonalData(items);  
-        console.log("Items: ", items);      
+        console.log("Items: ", items);    
+        */
+
     }, [])
 
     function handleBack() {
@@ -69,7 +86,7 @@ const ContentModifier = () => {
                     variant="contained" size='large'
                     startIcon={<ArrowBackIcon />}>Vissza</Button>
                 
-                <PDFDownloadLink document={<PDFfile name={contract.name} content={content} subjectNames={contract.namingConvention}/>} fileName='szerződés'>
+                <PDFDownloadLink document={<PDFfile name={contract.name} content={content} subjectNames={contract.namingConvention} data={personalData}/>} fileName='szerződés'>
                     <Button
                         variant="contained" size='large'
                         startIcon={<DoneIcon />}>PDF letöltése

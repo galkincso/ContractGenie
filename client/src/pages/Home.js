@@ -67,7 +67,7 @@ const Home = () => {
             <div className='center-text'>
                 <Stack className='custom-stack' direction="row" spacing={2}>
                     {contracts.map((contract)=>(
-                        <Card className='custom-card' variant="outlined" sx={{ maxWidth: 345 }}>
+                        <Card key={contract.id} className='custom-card' variant="outlined" sx={{ maxWidth: 345 }}>
                         <CardContent>
                             <Typography variant="h5" component="div">
                                 {contract.name}
