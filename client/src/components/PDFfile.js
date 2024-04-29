@@ -1,27 +1,37 @@
 import React, { useState } from 'react';
 import { Page, Font, Text, Document, StyleSheet } from '@react-pdf/renderer';
+import Roboto from "../fonts/Roboto-Regular.ttf";
 
+Font.register({
+    family: 'Roboto',
+    src: Roboto,
+    format: "truetype"
+});
 
 const styles = StyleSheet.create({
     header: {
         fontSize: 12,
         marginBottom: 20,
         textAlign: "center",
-        color: "grey"
+        color: "grey",
+        fontFamily: "Roboto"
     },
     title: {
         fontSize: 24,
-        textAlign: "center"
+        textAlign: "center",
+        fontFamily: "Roboto"
     },
     body: {
         paddingTop: 35,
         paddingBottom: 65,
-        paddingHorizontal: 35
+        paddingHorizontal: 35,
+        fontFamily: "Roboto"
     },
     text: {
         margin: 12,
         fontSize: 14,
-        textAlign: "justify"
+        textAlign: "justify",
+        fontFamily: "Roboto"
     },
     pageNumber: {
         position: "absolute",
@@ -35,7 +45,8 @@ const styles = StyleSheet.create({
     felek: {
         marginLeft: 10,
         fontSize: 14,
-        textAlign: "justify"
+        textAlign: "justify",
+        fontFamily: "Roboto"
     }
 });
 
