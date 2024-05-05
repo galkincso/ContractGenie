@@ -1,9 +1,9 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DoneIcon from '@mui/icons-material/Done';
 import TextareaAutosize from 'react-textarea-autosize';
-import PDFfile from './PDFfile';
+import PDFfile from '../components/PDFfile';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';

@@ -16,6 +16,7 @@ const Home = () => {
         axios
             .get('/contract/getall')
             .then(response => setContracts(response.data))
+            .catch(err => console.log(err))
     }, [])
 
     function handleClick (id) {
@@ -168,18 +169,3 @@ const Home = () => {
 
 };
 export default Home;
-
-/**
- * TO DO:
- * 
- * Personal Data oldal
- * Statikus design
- * Backend szerinti design
- * ocr
- * 
- * Tartalmi oldal
- * Statikus design
- * Backend szerinti design
- * 
- * Szerződés generálása
-*/

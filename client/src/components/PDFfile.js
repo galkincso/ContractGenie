@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Page, Font, Text, Document, StyleSheet } from '@react-pdf/renderer';
 import Roboto from "../fonts/Roboto-Regular.ttf";
 

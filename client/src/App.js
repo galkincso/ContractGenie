@@ -33,15 +33,3 @@ function App() {
 }
 
 export default App;
-
-// {contracts.map((contract) => <p key={contract.id}>{contract.id}-{contract.name}</p>)}
-
-/*
-<div className='header'>
-        <Box sx={{ width: '100%' }}>
-          <Typography variant="h1">
-            Contract Genie
-          </Typography>
-        </Box>
-      </div>
-*/

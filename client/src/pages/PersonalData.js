@@ -84,20 +84,23 @@ const PersonalData = () => {
         console.log("átadva: ", personalData);
         await localStorage.setItem('items', JSON.stringify(personalData));
         navigate('/create/' + { id }.id + '/content');
-        
+
     }
-    
+
     const handleUpload = async (event, namingConv, document) => {
         /* Feltöltődik a kép */
         setFile([...file, event.target.files[0]]);
 
         /* OCR -> képből szöveg */
+        console.log("Elinduk");
         var text = await convertImageToText(event.target.files[0]);
+        console.log("Vége");
 
         /* QA -> szövegből adatok */
         var name;
         var answer;
         var data;
+        console.log("Switch előtt");
         switch (document) {
             case "Lakcímkártya":
                 // Név
@@ -146,10 +149,17 @@ const PersonalData = () => {
                 // Hibakezelés
                 break;
         }
-  
+        console.log("Switch után");
+        console.log("előtte fgv: ", personalData.length);
         setPersonalData([...personalData, data]);
-        
-    }    
+        console.log("utána fgv: ", personalData.length);
+
+    }
+    const timer = (event, namingConv, document) => {
+        setTimeout(() => {
+            handleUpload(event, namingConv, document);
+        }, 3000);
+    }
 
     return (
         <>
@@ -179,10 +189,10 @@ const PersonalData = () => {
                         variant="contained" size='large'
                         startIcon={<ArrowBackIcon />}>Vissza</Button>
                     <Button
-                        disabled={contract.subjects*contract.documents?.length !== personalData?.length}
+                        disabled={contract.subjects * contract.documents?.length !== personalData?.length}
                         onClick={handleClick}
                         variant="contained" size='large'
-                        startIcon={<DoneIcon />}>Tovább
+                        startIcon={<DoneIcon />}>{contract.subjects * contract.documents?.length !== personalData?.length ? 'Loading...' : 'Tovább'}
                     </Button>
                 </div>
             </form>
