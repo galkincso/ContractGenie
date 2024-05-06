@@ -17,10 +17,11 @@ class Controller (val service: Service) {
     fun getAll() : Iterable<Contract> = service.getAllContracts()
 
     @GetMapping("/contract/get/{id}")
-    fun getIndex(@PathVariable id: String) : Optional<Contract> =
-        service.getContractById(id)
+    fun getIndex(@PathVariable id: String) : Contract =
+         service.getContractById(id)
 
-// Update
+
+    // Update
     @PutMapping("/contract/update")
     fun update(@RequestBody body: Contract) =
         service.updateContract(body)

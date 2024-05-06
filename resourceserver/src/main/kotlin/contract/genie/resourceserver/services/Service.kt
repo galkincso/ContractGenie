@@ -2,19 +2,38 @@ package contract.genie.resourceserver.services
 
 import contract.genie.resourceserver.repositories.Repository
 import contract.genie.resourceserver.models.Contract
+import contract.genie.resourceserver.repositories.ContractAlreadyExistsException
+import contract.genie.resourceserver.repositories.ContractNotFoundException
 import org.springframework.stereotype.Service
-import java.util.*
 
+/**
+ * Service for the Contract resource
+ */
 @Service
 class Service (val db: Repository) {
-// Create
-    fun create(contract: Contract) = db.save(contract)
 
-// Read
+    /**
+     * Create
+     */
+    fun create(contract: Contract) {
+        if (db.existsById(contract.id)) {
+            throw ContractAlreadyExistsException()
+        } else {
+            db.save(contract)
+        }
+    }
+
+    /**
+     * Read
+     */
     fun getAllContracts() : Iterable<Contract> = db.findAll()
-    fun getContractById(id : String) : Optional<Contract> = db.findById(id)
+    fun getContractById(id : String) : Contract {
+        return db.findById(id).orElseThrow {ContractNotFoundException(id)}
+    }
 
-// Update
+    /**
+     * Update
+     */
     fun updateContract (contract : Contract) {
         if (db.existsById(contract.id)) {
             db.save(
@@ -27,14 +46,14 @@ class Service (val db: Repository) {
                     documents = contract.documents,
             namingConvention = contract.namingConvention))
             return
-        }
+        } else throw ContractNotFoundException(contract.id)
     }
 
-// Delete
+    /**
+     * Delete
+     */
     fun deleteContract(id: String) {
-        if (db.existsById(id)) {
-            db.deleteById(id)
-            return
-        }
+        if (db.existsById(id)) db.deleteById(id)
+         else throw ContractNotFoundException(id)
     }
 }
