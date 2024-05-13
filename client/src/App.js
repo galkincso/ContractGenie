@@ -7,8 +7,8 @@ import UploadContract from './pages/UploadContract';
 import Details from './pages/Details';
 import Navigation from './components/Navigation';
 import SelectContract from './pages/SelectContract';
-import PersonalData from './components/PersonalData';
-import ContentModifier from './components/ContentModifier';
+import PersonalData from './pages/PersonalData';
+import ContentModifier from './pages/ContentModifier';
 
 function App() {
 

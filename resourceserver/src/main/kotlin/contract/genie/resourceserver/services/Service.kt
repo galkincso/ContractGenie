@@ -15,11 +15,11 @@ class Service (val db: Repository) {
     /**
      * Create
      */
-    fun create(contract: Contract) {
+    fun create(contract: Contract): Contract {
         if (db.existsById(contract.id)) {
             throw ContractAlreadyExistsException()
         } else {
-            db.save(contract)
+            return db.save(contract)
         }
     }
 
@@ -27,16 +27,16 @@ class Service (val db: Repository) {
      * Read
      */
     fun getAllContracts() : Iterable<Contract> = db.findAll()
-    fun getContractById(id : String) : Contract {
+    fun getContractById(id: String) : Contract {
         return db.findById(id).orElseThrow {ContractNotFoundException(id)}
     }
 
     /**
      * Update
      */
-    fun updateContract (contract : Contract) {
+    fun updateContract (contract : Contract): Contract {
         if (db.existsById(contract.id)) {
-            db.save(
+            return db.save(
                 Contract(
                     id = contract.id,
                     name = contract.name,
@@ -45,7 +45,7 @@ class Service (val db: Repository) {
                     subjects = contract.subjects,
                     documents = contract.documents,
             namingConvention = contract.namingConvention))
-            return
+
         } else throw ContractNotFoundException(contract.id)
     }
 

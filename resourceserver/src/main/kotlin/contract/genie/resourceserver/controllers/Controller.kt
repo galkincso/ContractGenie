@@ -2,31 +2,46 @@ package contract.genie.resourceserver.controllers
 
 import contract.genie.resourceserver.models.Contract
 import contract.genie.resourceserver.services.Service
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
 @CrossOrigin
 class Controller (val service: Service) {
-// Create
+    /**
+     * Create endpoint
+     */
     @PostMapping("/contract/create")
-    fun create(@RequestBody contract: Contract) = service.create(contract)
+    fun create(@RequestBody contract: Contract) : ResponseEntity<Contract> {
+        return ResponseEntity.ok(service.create(contract))
+    }
 
-// Read
+    /**
+     * Read all contract endpoint
+     */
     @GetMapping("/contract/getall")
     fun getAll() : Iterable<Contract> = service.getAllContracts()
 
+    /**
+     * Read one contract by ID endpoint
+     */
     @GetMapping("/contract/get/{id}")
     fun getIndex(@PathVariable id: String) : Contract =
          service.getContractById(id)
 
 
-    // Update
+    /**
+     * Update endpoint
+     */
     @PutMapping("/contract/update")
-    fun update(@RequestBody body: Contract) =
-        service.updateContract(body)
+    fun update(@RequestBody body: Contract) : ResponseEntity<Contract> {
+        return ResponseEntity.ok(service.updateContract(body))
+    }
 
-// Delete
+    /**
+     * Delete endpoint
+     */
     @DeleteMapping("/contract/delete/{id}")
     fun delete(@PathVariable id: String) = service.deleteContract(id)
 }
