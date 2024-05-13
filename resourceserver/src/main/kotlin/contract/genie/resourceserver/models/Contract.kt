@@ -14,11 +14,12 @@ data class Contract (
     val documents: Array<String>,
     val namingConvention: Array<String>
 )
-/*
-* id -> szerződés azonosítója
-* name -> szerződés neve
-* content -> szerződés tartalma
-* subjects -> hány alanya van a szerződésnek: 1 vagy 2
-* documents -> milyen okmányok szükségesek a szerződéshez
-* namingConvention -> megszólítások a szerződésben
+/**
+ * id -> Identifies the contract
+ * name -> Name of the contract
+ * content -> Content of the contract
+ * summary -> Summary about the contract
+ * subjects -> Number of partiesn to the contract
+ * documents -> Which documents do you need in this contract
+ * namingConvention -> Naming conventions in the contract
 * */

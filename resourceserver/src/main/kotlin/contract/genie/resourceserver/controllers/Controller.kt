@@ -9,6 +9,7 @@ import java.util.*
 @RestController
 @CrossOrigin
 class Controller (val service: Service) {
+
     /**
      * Create endpoint
      */
@@ -27,9 +28,7 @@ class Controller (val service: Service) {
      * Read one contract by ID endpoint
      */
     @GetMapping("/contract/get/{id}")
-    fun getIndex(@PathVariable id: String) : Contract =
-         service.getContractById(id)
-
+    fun getIndex(@PathVariable id: String) : Contract = service.getContractById(id)
 
     /**
      * Update endpoint
