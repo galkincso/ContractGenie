@@ -27,8 +27,6 @@ const ContentModifier = () => {
         const items = JSON.parse(localStorage.getItem('items'));
         if (items) setPersonalData(items);  
         console.log("Items: ", items);    
-        
-
     }, [])
 
     function handleBack() {
@@ -82,20 +80,3 @@ const ContentModifier = () => {
     )
 };
 export default ContentModifier;
-
-/**
- * {
-          namingConvention: "Bérbeadó",
-          name: "GÁL KINCSŐ DÓRA",
-          info: "2022 TAHITÓTFALU"
-        },
-        {
-          namingConvention: "Bérbeadó",
-          info: "9493783218"
-        },
-        {
-          namingConvention: "Bérlő",
-          name: "TESZT Elek",
-          info: "1162 Buadpest"
-        }
- */

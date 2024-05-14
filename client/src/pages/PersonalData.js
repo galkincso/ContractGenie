@@ -21,6 +21,7 @@ const PersonalData = () => {
         axios
             .get('/contract/get/' + { id }.id)
             .then(response => setContract(response.data))
+            .catch(e => console.log(e))
     }, [])
 
     const worker = createWorker();
@@ -28,7 +29,7 @@ const PersonalData = () => {
     const convertImageToText = async (toConvertImage) => {
         const worker = await createWorker('hun');
         const ret = await worker.recognize(toConvertImage);
-        console.log(ret.data.text);
+        //console.log(ret.data.text);
         await setOcrData([...ocrData, ret.data.text]);
         await worker.terminate();
         return ret.data.text;
@@ -62,7 +63,8 @@ const PersonalData = () => {
                 method: "POST",
                 body: JSON.stringify(data),
             }
-        );
+        )
+        .catch(e => console.log(e));
         const result = await response.json();
         return result;
     }

@@ -4,6 +4,9 @@ import { renderWithRouter } from "./ListContracts.test"
 
 describe ("SelectContract", () => {
 
+    /**
+     * Testing the rendering of the Select Contract page
+     */
     it("SelectContract page renders", () => {
         renderWithRouter(<SelectContract/>);
 

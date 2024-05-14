@@ -1,33 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import { AppBar, Box, Container, Divider, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-
 
 const Navigation = () => {
 
     const navigate = useNavigate();
 
+    /** Navigate to the List Contract page */
     function handleClickList() {
         navigate("/list");
     }
+
+    /** Navigate to the Upload Contract page */
     function handleClickUpload() {
         navigate("/upload");
     }
+
+    /** Navigate to the Select Contract page */
     function handleClickCreate() {
         navigate("/create");
     }
+
+    /** Navigate to the Home page */
     function handleClickHome() {
         navigate("/");
     }
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
 
+    /** Opens the nav menu when the screen is smaller */
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
 
+    /** Closes the nav menu when the screen is smaller */
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
@@ -75,13 +83,6 @@ const Navigation = () => {
                                 <MenuItem key={'upload'} onClick={handleClickUpload}>
                                     <Typography textAlign="center">Sablon felvétele</Typography>
                                 </MenuItem>
-                                {/*
-                                {pages.map((page) => (
-                                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                        <Typography textAlign="center">{page}</Typography>
-                                    </MenuItem>
-                                ))}
-                                */}
                             </Menu>
                         </Box>
 
@@ -99,16 +100,6 @@ const Navigation = () => {
                                 onClick={handleClickUpload}
                                 sx={{ my: 2, color: 'black', display: 'block' }}
                                 key={'upload'}>Sablon felvétele</Button>
-                            {/*
-                            {pages.map((page) => (
-                                <Button
-                                    key={page}
-                                    onClick={handleNavigation(page)}
-                                    sx={{ my: 2, color: 'white', display: 'block' }}>
-                                    {page}
-                                </Button>
-                            ))}
-                            */}
                         </Box>
 
                         {/* MINDIG */}
