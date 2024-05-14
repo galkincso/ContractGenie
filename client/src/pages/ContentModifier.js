@@ -32,9 +32,11 @@ const ContentModifier = () => {
     function handleBack() {
        navigate(-1);
     }
-    function handleClick() {
-        console.log("Adat: ", personalData[0]);
-    }
+    
+    /**
+     * Formats and breaks the text received in the parameter according to the numbers in the text
+     * @param {contract content} text 
+     */
     function formatText(text) {
         var formattedText = '';
 
