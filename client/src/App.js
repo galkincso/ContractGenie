@@ -9,6 +9,7 @@ import Navigation from './components/Navigation';
 import SelectContract from './pages/SelectContract';
 import PersonalData from './pages/PersonalData';
 import ContentModifier from './pages/ContentModifier';
+import Footer from './components/Footer';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/create/:id" element={<PersonalData />} />
           <Route path="/create/:id/content" element={<ContentModifier />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
 
     </>

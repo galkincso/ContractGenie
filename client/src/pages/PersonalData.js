@@ -1,4 +1,4 @@
-import { Box, Button, Input, Paper, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from '@mui/material';
+import { Box, Button, Paper, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -16,6 +16,7 @@ const PersonalData = () => {
     const [contract, setContract] = useState('');
     const navigate = useNavigate();
     const [personalData, setPersonalData] = useState([]);
+    const [updatePersonalData, setUpdatePersonalData] = useState(null);
 
     useEffect(() => {
         axios
@@ -23,6 +24,15 @@ const PersonalData = () => {
             .then(response => setContract(response.data))
             .catch(e => console.log(e))
     }, [])
+
+    /**
+     * Erre azért van szükség, mert a feltöltés aszinkron és emiatt a personalData beállítása is aszinkron módon kell megvalósuljon
+     */
+    useEffect(() => {
+        if (updatePersonalData) {
+            setPersonalData([...personalData, updatePersonalData]);
+        }
+    }, [updatePersonalData])
 
     const worker = createWorker();
 
@@ -41,7 +51,12 @@ const PersonalData = () => {
             for (let k = 0; k < contract.documents.length; k++) {
                 table.push(
                     <TableRow key={contract.id + i + k} >
-                        <TableCell align="left">{contract.namingConvention[i]}: {contract.documents[k]}</TableCell>
+                        <TableCell align="left">
+                            <h5>
+                            <b>{contract.namingConvention[i]}</b> : {contract.documents[k]}
+                            </h5>
+                            
+                            </TableCell>
                         <TableCell align="right">
                             <TextField onChange={(e) => handleUpload(e, contract.namingConvention[i], contract.documents[k])} type='file' id="standard-basic" label={contract.documents[k]} variant="standard" />
                         </TableCell>
@@ -153,19 +168,20 @@ const PersonalData = () => {
         }
         console.log("Switch után");
         console.log("előtte fgv: ", personalData.length);
-        setPersonalData([...personalData, data]);
+        setUpdatePersonalData(data);
         console.log("utána fgv: ", personalData.length);
+        //timer();
 
     }
     const timer = (event, namingConv, document) => {
         setTimeout(() => {
-            handleUpload(event, namingConv, document);
-        }, 3000);
+            console.log("TIMER fgv: ", personalData.length);
+        }, 10000);
     }
 
     return (
         <>
-            <div className='center-text'>
+            <div className='center-text m-5'>
                 <Box sx={{ width: '100%' }}>
                     <Typography variant="h4">
                         Szükséges adatok
@@ -175,7 +191,7 @@ const PersonalData = () => {
 
             <form>
                 <div className='list-table'>
-                    <Paper sx={{ width: '70%', overflow: 'hidden' }}>
+                    <Paper sx={{ width: '80%', overflow: 'hidden' }}>
                         <TableContainer component={Paper}>
                             <Table aria-label="simple table">
                                 <TableBody>
@@ -203,17 +219,3 @@ const PersonalData = () => {
     )
 };
 export default PersonalData;
-
-/*
-    const handleAnswear = async () => {
-        console.log("OCR Data: ", ocrData);
-        query({
-            "inputs": {
-                "question": "Melyik folyó szeli ketté Budapestet?",
-                "context": "Magyarország fővárosát, Budapestet a Duna folyó szeli ketté. A XIX. században épült Lánchíd a dimbes-dombos budai oldalt köti össze a sík Pesttel. A Várdomb oldalában futó siklóval juthatunk fel a budai Óvárosba, ahol a Budapesti Történeti Múzeum egészen a római időkig visszavezetve mutatja be a városi életet. A Szentháromság tér ad otthont a XIII. századi Mátyás-templomnak és a Halászbástya lőtornyainak, amelyekből messzire ellátva gyönyörködhetünk a városban."
-            }
-        }).then((response) => {
-            console.log(JSON.stringify(response));
-        });
-    }
-    */

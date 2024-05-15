@@ -53,7 +53,7 @@ const ContentModifier = () => {
 
     return (
         <>
-            <div className='center-text'>
+            <div className='center-text m-5'>
                 <Box sx={{ width: '100%' }}>
                     <Typography variant="h4">
                         Szerződés tartalma
@@ -62,7 +62,7 @@ const ContentModifier = () => {
             </div>
 
             <div className='center-text'>
-                <TextareaAutosize type="text" className='custom-textarea' onChange={e => setContent(e.target.value)} defaultValue={content} />
+                <TextareaAutosize type="text" className='custom-textarea shadow-lg p-3 mb-5 bg-white rounded' onChange={e => setContent(e.target.value)} defaultValue={content} />
             </div>
 
             <div className='btnBack options'>
