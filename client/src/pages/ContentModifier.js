@@ -23,6 +23,9 @@ const ContentModifier = () => {
             formatText(response.data.content);
             setContract(response.data);
             })
+        .catch(err => {
+            alert('Hoppá.. Valami hiba történt');
+        })
         
         const items = JSON.parse(localStorage.getItem('items'));
         if (items) setPersonalData(items);  

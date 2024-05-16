@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import { Box, Divider, Typography, Card, CardContent, CardActions, TableContainer, Table, tableClasses, TableBody, TableRow, TableCell, Stepper, Step, StepLabel, StepContent } from '@mui/material';
+import { Box, Divider, Typography, Card, CardContent, CardActions, TableContainer, Table, tableClasses, TableBody, TableRow, TableCell, Stepper, Step, StepLabel, StepContent, Alert } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import axios from 'axios';
-import Footer from '../components/Footer';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+
 
 const Home = () => {
 
     const navigate = useNavigate();
     const [contracts, setContracts] = useState([]);
+    const [openErrorDialog, setOpenErrorDialog] = useState(false);
+    const [activeStep, setActiveStep] = useState(0);
+
 
     useEffect(() => {
         axios
             .get('/contract/getall')
             .then(response => setContracts(response.data))
-            .catch(err => console.log(err))
+            .catch(err => setOpenErrorDialog(true))
     }, [])
-
-    function handleClick(id) {
-        navigate('/create/' + id);
-    }
 
     const steps = [
         {
@@ -46,7 +46,13 @@ const Home = () => {
         },
     ];
 
-    const [activeStep, setActiveStep] = React.useState(0);
+    function handleClick(id) {
+        navigate('/create/' + id);
+    };
+
+    const handleCloseErrorDialog = () => {
+        setOpenErrorDialog(false);
+    };
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -107,49 +113,49 @@ const Home = () => {
             </div>
 
             {/** Stepper */}
-                <Box
-                    className='mx-auto'
-                    sx={{ maxWidth: 800 }}>
-                    <Stepper activeStep={activeStep} orientation="vertical">
-                        {steps.map((step, index) => (
-                            <Step key={step.label}>
-                                <StepLabel>
-                                    {step.label}
-                                </StepLabel>
+            <Box
+                className='mx-auto'
+                sx={{ maxWidth: 800 }}>
+                <Stepper activeStep={activeStep} orientation="vertical">
+                    {steps.map((step, index) => (
+                        <Step key={step.label}>
+                            <StepLabel>
+                                {step.label}
+                            </StepLabel>
 
-                                <StepContent>
-                                    <Typography>{step.description}</Typography>
-                                    <Box sx={{ mb: 2 }}>
-                                        <div>
-                                            <Button
-                                                variant="contained"
-                                                onClick={handleNext}
-                                                sx={{ mt: 1, mr: 1 }} >
+                            <StepContent>
+                                <Typography>{step.description}</Typography>
+                                <Box sx={{ mb: 2 }}>
+                                    <div>
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleNext}
+                                            sx={{ mt: 1, mr: 1 }} >
 
-                                                {index === steps.length - 1 ? 'Kész' : 'Következő'}
-                                            </Button>
-                                            <Button
-                                                variant='outlined'
-                                                disabled={index === 0}
-                                                onClick={handleBack}
-                                                sx={{ mt: 1, mr: 1 }}>
-                                                Vissza
-                                            </Button>
-                                        </div>
-                                    </Box>
-                                </StepContent>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    {activeStep === steps.length && (
-                        <Paper square elevation={0} sx={{ p: 3 }}>
-                            <Typography>Kész is van a szerződésed</Typography>
-                            <Button variant='outlined' onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-                                Újra
-                            </Button>
-                        </Paper>
-                    )}
-                </Box>
+                                            {index === steps.length - 1 ? 'Kész' : 'Következő'}
+                                        </Button>
+                                        <Button
+                                            variant='outlined'
+                                            disabled={index === 0}
+                                            onClick={handleBack}
+                                            sx={{ mt: 1, mr: 1 }}>
+                                            Vissza
+                                        </Button>
+                                    </div>
+                                </Box>
+                            </StepContent>
+                        </Step>
+                    ))}
+                </Stepper>
+                {activeStep === steps.length && (
+                    <Paper square elevation={0} sx={{ p: 3 }}>
+                        <Typography>Kész is van a szerződésed</Typography>
+                        <Button variant='outlined' onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+                            Újra
+                        </Button>
+                    </Paper>
+                )}
+            </Box>
 
             {/** Contracts in Horizontal scrolling */}
             <div className='m-4 p-3'>
@@ -187,7 +193,26 @@ const Home = () => {
                 </TableContainer>
             </div>
 
-           
+            {/** Error */}
+            <Dialog
+                open={openErrorDialog}
+                onClose={handleCloseErrorDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">
+                    {"Hoppá.. Valami hiba történt!"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Kérlek töltsd újra az oldalt vagy gyere vissza később.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant='contained' onClick={handleCloseErrorDialog} autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
         </>
     )

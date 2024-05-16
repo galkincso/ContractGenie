@@ -22,7 +22,9 @@ const PersonalData = () => {
         axios
             .get('/contract/get/' + { id }.id)
             .then(response => setContract(response.data))
-            .catch(e => console.log(e))
+            .catch(err => {
+                alert('Hoppá.. Valami hiba történt');
+            })
     }, [])
 
     /**

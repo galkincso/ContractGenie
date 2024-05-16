@@ -1,5 +1,4 @@
-import { Height } from '@mui/icons-material';
-import { Box, CardActionArea, CardContent, Grid, Typography } from '@mui/material';
+import { Box, Button, CardActionArea, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,16 +8,24 @@ const SelectContract = (props) => {
 
     const navigate = useNavigate();
     const [contracts, setContracts] = useState([]);
+    const [openErrorDialog, setOpenErrorDialog] = useState(false);
 
     useEffect(() => {
         axios
             .get('/contract/getall')
             .then(response => setContracts(response.data))
+            .catch(err => {
+                setOpenErrorDialog(true)
+            })
     }, [])
 
     function handleClick(id) {
         navigate('/create/' + id);
     }
+    const handleCloseErrorDialog = () => {
+        setOpenErrorDialog(false);
+        navigate('/');
+    };
 
     return (
         <>
@@ -31,7 +38,7 @@ const SelectContract = (props) => {
             </div>
 
             <div className='mx-4 p-2'>
-                <Grid className='custom-grid' container spacing={5} columns={{ xs: 4, md: 12 }}>
+                <Grid className='custom-grid' container spacing={5} columns={{ xs: 4, sm: 6,  md: 12 }}>
                     {contracts.map((contract) => (
                         <Grid key={contract.id} item xs={3}>
                             <Card className='custom-card h-100' sx={{ Height: '100%' }}>
@@ -50,6 +57,27 @@ const SelectContract = (props) => {
                     ))}
                 </Grid>
             </div>
+
+            {/** Error */}
+            <Dialog
+                open={openErrorDialog}
+                onClose={handleCloseErrorDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">
+                    {"Hoppá.. Valami hiba történt!"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Kérlek töltsd újra az oldalt vagy gyere vissza később.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant='contained' onClick={handleCloseErrorDialog} autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 
