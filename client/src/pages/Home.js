@@ -161,7 +161,7 @@ const Home = () => {
             <div className='m-4 p-3'>
                 <TableContainer style={{ width: '100%', marginLeft: 0 }}>
                     <Table className={tableClasses.table} aria-label="simple table">
-                        <TableBody>
+                        <TableBody key='{row.name}'>
                             <TableRow key='{row.name}'>
                                 {contracts.map((contract) => (
                                     <TableCell align="center">

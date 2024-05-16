@@ -103,7 +103,7 @@ function createHeader(props) {
 
 const PDFfile = (props) => (
     <Document>
-        <Page size="A4" style={styles.body}>
+        <Page size="A4" style={styles.body} key={'1'}>
             <Text style={styles.header}>Contract Genie</Text>
             <Text style={styles.title}>{props.name}</Text>
             <Text style={styles.text}>1. Felek:</Text>

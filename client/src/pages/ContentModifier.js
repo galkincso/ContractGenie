@@ -29,7 +29,6 @@ const ContentModifier = () => {
         
         const items = JSON.parse(localStorage.getItem('items'));
         if (items) setPersonalData(items);  
-        console.log("Items: ", items);    
     }, [])
 
     function handleBack() {

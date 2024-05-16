@@ -41,7 +41,6 @@ const PersonalData = () => {
     const convertImageToText = async (toConvertImage) => {
         const worker = await createWorker('hun');
         const ret = await worker.recognize(toConvertImage);
-        //console.log(ret.data.text);
         await setOcrData([...ocrData, ret.data.text]);
         await worker.terminate();
         return ret.data.text;
@@ -81,26 +80,15 @@ const PersonalData = () => {
                 body: JSON.stringify(data),
             }
         )
-        .catch(e => console.log(e));
+        if (response.status !== 200) {
+            alert('A képfeltöltés nem sikerült, próbáld újra!');
+        }
+        console.log("HF Error", response);
         const result = await response.json();
         return result;
     }
 
     const handleClick = async () => {
-        // itt kellene meghívni egy olyan függvényt, amelyik egy ciklusban beadja a fotókat az ai-nak, majd a szükséges datokat elmenti egy változóba
-        // jelenleg handleUpload utolsó komment sora hívja
-        //console.log("ocrData: ", ocrData);
-        /*for (let i = 0; i < ocrData.length; i++) {
-            query({
-                "inputs": {
-                    "question": "Név?",
-                    "context": ocrData[i]
-                }
-            }).then((response) => {
-                console.log(JSON.stringify(response));
-            });
-        }*/
-        console.log("átadva: ", personalData);
         await localStorage.setItem('items', JSON.stringify(personalData));
         navigate('/create/' + { id }.id + '/content');
 
@@ -111,9 +99,7 @@ const PersonalData = () => {
         setFile([...file, event.target.files[0]]);
 
         /* OCR -> képből szöveg */
-        console.log("Elinduk");
         var text = await convertImageToText(event.target.files[0]);
-        console.log("Vége");
 
         /* QA -> szövegből adatok */
         var name;
@@ -166,19 +152,11 @@ const PersonalData = () => {
                 break;
             default:
                 // Hibakezelés
+                alert('Hiba történt az igazolvány csomportosításakor, kérlek próbálj újra később!')
                 break;
         }
-        console.log("Switch után");
-        console.log("előtte fgv: ", personalData.length);
         setUpdatePersonalData(data);
-        console.log("utána fgv: ", personalData.length);
-        //timer();
 
-    }
-    const timer = (event, namingConv, document) => {
-        setTimeout(() => {
-            console.log("TIMER fgv: ", personalData.length);
-        }, 10000);
     }
 
     return (

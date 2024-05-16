@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from 'reactstrap';
 
-const SelectContract = (props) => {
+const SelectContract = () => {
 
     const navigate = useNavigate();
     const [contracts, setContracts] = useState([]);
@@ -38,7 +38,7 @@ const SelectContract = (props) => {
             </div>
 
             <div className='mx-4 p-2'>
-                <Grid className='custom-grid' container spacing={5} columns={{ xs: 4, sm: 6,  md: 12 }}>
+                <Grid className='custom-grid' container spacing={5} columns={{ xs: 4, sm: 6,  md: 9, lg: 12 }}>
                     {contracts.map((contract) => (
                         <Grid key={contract.id} item xs={3}>
                             <Card className='custom-card h-100' sx={{ Height: '100%' }}>
