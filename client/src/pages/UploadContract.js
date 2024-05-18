@@ -26,11 +26,9 @@ const UploadContract = () => {
     }
 
     function handleContractName(event) {
-        //console.log(event.target.value);
         setContractName(event.target.value);
     }
     function handleUpload(event) {
-        //console.log(event);
         setFile(event.target.files[0]);
     }
 
@@ -39,14 +37,12 @@ const UploadContract = () => {
         formData.append('file', file);
 
         // upload file
-        //console.log("File ", file);
        axios.post('http://localhost:8080/upload', formData)
             .then(response => {
                 console.log("Válasz: ", response);
             })
 
         // upload contract
-        //console.log("Contract name: ", contractName);
         var id = crypto.randomUUID();
         var body = {
             "id": id,
@@ -106,7 +102,6 @@ const UploadContract = () => {
                         startIcon={<ClearIcon />}>Mégsem</Button>
                 </div>
             </form>
-
         </>
     )
 

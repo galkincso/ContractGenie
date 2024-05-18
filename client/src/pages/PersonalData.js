@@ -28,7 +28,7 @@ const PersonalData = () => {
     }, [])
 
     /**
-     * Erre azért van szükség, mert a feltöltés aszinkron és emiatt a personalData beállítása is aszinkron módon kell megvalósuljon
+     * This is necessary because the upload is asynchronous and therefore the setting of personalData must also be asynchronous
      */
     useEffect(() => {
         if (updatePersonalData) {
@@ -38,6 +38,11 @@ const PersonalData = () => {
 
     const worker = createWorker();
 
+    /**
+     * OCR API Call
+     * @param {image} toConvertImage 
+     * @returns text from the image
+     */
     const convertImageToText = async (toConvertImage) => {
         const worker = await createWorker('hun');
         const ret = await worker.recognize(toConvertImage);
@@ -46,6 +51,9 @@ const PersonalData = () => {
         return ret.data.text;
     }
 
+    /**
+     * Create an array based on the persons involved and the necessary documents
+     */
     function createTable() {
         var table = [];
         for (let i = 0; i < contract.subjects; i++) {
@@ -71,6 +79,11 @@ const PersonalData = () => {
         navigate(-1);
     }
 
+    /**
+     * Question Ansering API Call
+     * @param {context text} data 
+     * @returns answer for the question
+     */
     async function query(data) {
         const response = await fetch(
             "https://api-inference.huggingface.co/models/mcsabai/huBert-fine-tuned-hungarian-squadv2",
