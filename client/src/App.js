@@ -5,10 +5,10 @@ import Home from "./pages/Home";
 import ListContract from './pages/ListContract';
 import UploadContract from './pages/UploadContract';
 import Details from './pages/Details';
-import Navigation from './components/Navigation';
 import SelectContract from './pages/SelectContract';
 import PersonalData from './pages/PersonalData';
 import ContentModifier from './pages/ContentModifier';
+import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 
 function App() {

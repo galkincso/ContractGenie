@@ -28,15 +28,13 @@ const PersonalData = () => {
     }, [])
 
     /**
-     * This is necessary because the upload is asynchronous and therefore the setting of personalData must also be asynchronous
+     * The upload is asynchronous and therefore the setting of personalData must also be asynchronous
      */
     useEffect(() => {
         if (updatePersonalData) {
             setPersonalData([...personalData, updatePersonalData]);
         }
     }, [updatePersonalData])
-
-    const worker = createWorker();
 
     /**
      * OCR API Call
@@ -48,11 +46,13 @@ const PersonalData = () => {
         const ret = await worker.recognize(toConvertImage);
         await setOcrData([...ocrData, ret.data.text]);
         await worker.terminate();
+        //console.log("Raw Text: ", ret.data.text);
         return ret.data.text;
     }
 
     /**
      * Create an array based on the persons involved and the necessary documents
+     * @returns An array with the lines for upload documents
      */
     function createTable() {
         var table = [];
@@ -104,9 +104,14 @@ const PersonalData = () => {
     const handleClick = async () => {
         await localStorage.setItem('items', JSON.stringify(personalData));
         navigate('/create/' + { id }.id + '/content');
-
     }
 
+    /**
+     * This function is handling the upload process
+     * @param {*} event 
+     * @param {naming conventions in the current contract} namingConv 
+     * @param {required personal documents in the current contract} document 
+     */
     const handleUpload = async (event, namingConv, document) => {
         /* Feltöltődik a kép */
         setFile([...file, event.target.files[0]]);
@@ -118,7 +123,6 @@ const PersonalData = () => {
         var name;
         var answer;
         var data;
-        console.log("Switch előtt");
         switch (document) {
             case "Lakcímkártya":
                 // Név
@@ -158,10 +162,15 @@ const PersonalData = () => {
                 // Személyi igazolvány szám
                 answer = await query({
                     "inputs": {
-                        "question": "Személyi igazolvány szám?",
+                        "question": "Okmányazonosító/Doc. No.?",
                         "context": text
                     }
                 });
+                console.log("Szem ig: ", answer.answer);
+                data = {
+                    "namingConvention": namingConv,
+                    "info": answer.answer
+                }
                 break;
             default:
                 // Hibakezelés
@@ -169,7 +178,7 @@ const PersonalData = () => {
                 break;
         }
         setUpdatePersonalData(data);
-
+        //console.log("Personal Data: ", personalData);
     }
 
     return (
@@ -203,7 +212,7 @@ const PersonalData = () => {
                         disabled={contract.subjects * contract.documents?.length !== personalData?.length}
                         onClick={handleClick}
                         variant="contained" size='large'
-                        startIcon={<DoneIcon />}>{contract.subjects * contract.documents?.length !== personalData?.length ? 'Loading...' : 'Tovább'}
+                        startIcon={<DoneIcon />}>{ 'Tovább'}
                     </Button>
                 </div>
             </form>

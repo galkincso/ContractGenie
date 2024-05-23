@@ -92,6 +92,7 @@ const UploadContract = () => {
                 </div>
                 <div className='btnBack options'>
                     <Button
+                        disabled
                         onClick={handleSave}
                         variant="contained" size='large'
                         startIcon={<DoneIcon />}>Kész

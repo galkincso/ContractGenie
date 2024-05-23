@@ -16,11 +16,8 @@ class Service (val db: Repository) {
      * Create
      */
     fun create(contract: Contract): Contract {
-        if (db.existsById(contract.id)) {
-            throw ContractAlreadyExistsException()
-        } else {
-            return db.save(contract)
-        }
+        if (db.existsById(contract.id)) throw ContractAlreadyExistsException()
+        else return db.save(contract)
     }
 
     /**

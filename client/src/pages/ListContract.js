@@ -105,10 +105,12 @@ const ListContract = () => {
                                             <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                                 <TableCell key={row.id}>{row.name}</TableCell>
                                                 <TableCell key={row.name + 'analize'}><Button
+                                                    disabled
                                                     onClick={e => { handleAnalize(row.id); }}
                                                     variant="contained"
                                                     color="primary">Kérem az adatokat</Button></TableCell>
                                                 <TableCell key={row.name + 'delete'}><Button
+                                                    disabled
                                                     onClick={e => { handleDelete(row.id); }}
                                                     variant="contained"
                                                     color="primary">Törlöm a szerződést</Button></TableCell>

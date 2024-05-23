@@ -161,10 +161,10 @@ const Home = () => {
             <div className='m-4 p-3'>
                 <TableContainer style={{ width: '100%', marginLeft: 0 }}>
                     <Table className={tableClasses.table} aria-label="simple table">
-                        <TableBody key='{row.name}'>
-                            <TableRow key='{row.name}'>
+                        <TableBody>
+                            <TableRow>
                                 {contracts.map((contract) => (
-                                    <TableCell align="center">
+                                    <TableCell key={contract.id} align="center">
                                         <Card key={contract.id} className='custom-card shadow p-3 mb-5 bg-white rounded' sx={{ width: 300, height: 220 }}>
                                             <CardContent>
                                                 <Typography className='mb-2' variant="h5" component="div">
@@ -173,7 +173,7 @@ const Home = () => {
                                                 <Typography variant="body2">
                                                     <b>Szükséges iratok:</b>
                                                     <br />
-                                                    személyi, lakcímkártya
+                                                    {contract.documents}
                                                 </Typography>
                                             </CardContent>
                                             <CardActions className='custom-button-container'>
