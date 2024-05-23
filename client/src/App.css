@@ -92,3 +92,15 @@
   padding: 10px;
   height: auto;
 }
+.custom-button-container {
+  display: flex;
+  justify-content: center;
+}
+.custom-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.MuiStepLabel-labelContainer span {
+  font-size: x-large;
+}

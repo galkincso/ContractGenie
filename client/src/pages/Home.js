@@ -1,29 +1,74 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import {Box, Divider, IconButton, Stack, Typography, Card, CardContent, CardActions, CardActionArea } from '@mui/material';
+import { Box, Divider, Typography, Card, CardContent, CardActions, TableContainer, Table, tableClasses, TableBody, TableRow, TableCell, Stepper, Step, StepLabel, StepContent, Alert } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import axios from 'axios';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+
 
 const Home = () => {
 
     const navigate = useNavigate();
     const [contracts, setContracts] = useState([]);
+    const [openErrorDialog, setOpenErrorDialog] = useState(false);
+    const [activeStep, setActiveStep] = useState(0);
+
 
     useEffect(() => {
         axios
             .get('/contract/getall')
             .then(response => setContracts(response.data))
+            .catch(err => setOpenErrorDialog(true))
     }, [])
 
-    function handleClick (id) {
+    const steps = [
+        {
+            label: 'Válaszd ki, hogy milyen szerződésre van szükséged',
+            description: `Válaszd ki a számodra legmegfelelőbb szerződést a sokféle lehetőség közül!
+             Legyen szó bármilyen igényről vagy speciális feltételről, nálunk biztosan megtalálod a neked való megoldást.
+            Fedezd fel a különböző szerződéstípusokat, és találd meg azt, ami tökéletesen illik a szükségleteidhez!`,
+        },
+        {
+            label: 'Töltsd fel a fotókat a szükséges iratokról',
+            description: `Csak töltsd fel a szükséges dokumentumok fotóit, és a Mesterséges Intelligencia elvégzi a munkát helyetted! 
+                Ez nemcsak egyszerűbbé és gyorsabbá teszi a folyamatot,
+                de kevesebb hibalehetőséget is jelent az adatok kitöltésekor.
+                Így biztos lehetsz benne, hogy minden adat pontosan és helyesen kerül a szerződésbe.`,
+        },
+        {
+            label: 'Szabd személyre a szerződés tartalmát',
+            description: `Szabd személyre a szerződés részleteit az igényeidnek megfelelően! 
+            Adj hozzá olyan kikötéseket és feltételeket, amelyek számodra fontosak. Legyen szó speciális szolgáltatásokról, 
+            egyedi árazásról vagy bármilyen egyéb feltételről, 
+            a szerződés minden részletét a saját igényeidhez igazíthatod, hogy tökéletesen megfeleljen az elvárásaidnak.`,
+        },
+    ];
+
+    function handleClick(id) {
         navigate('/create/' + id);
-    }
+    };
+
+    const handleCloseErrorDialog = () => {
+        setOpenErrorDialog(false);
+    };
+
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
+    };
 
     return (
         <>
+            {/** Top content */}
             <div className='center-text'>
                 <Box
                     sx={{
@@ -31,12 +76,14 @@ const Home = () => {
                         flexWrap: 'wrap',
                         '& > :not(style)': {
                             m: 1,
-                            width: 1200,
-                            height: 200,
+                            width: '85%',
+                            height: 'auto',
                         },
                         justifyContent: 'center',
                     }}>
                     <Paper
+                        square={false}
+                        className='shadow-lg p-5 mb-2 bg-white rounded'
                         elevation={3}>
                         <Typography
                             className='paper-text'
@@ -46,12 +93,13 @@ const Home = () => {
                                 letterSpacing: '.1rem',
                                 color: 'black',
                                 textDecoration: 'none',
+                                fontSize: 30
                             }}>
-                            Itt a szerződéskötés olyan élmény, mint sehol máshol!
+                            Itt a <b>szerződéskötés</b> olyan élmény, mint sehol máshol!
                         </Typography>
                         <Divider variant="middle" />
                         <Typography
-                            className='paper-text'
+                            className='paper-text p-2'
                             variant="h6"
                             sx={{
                                 letterSpacing: '.1rem',
@@ -64,122 +112,110 @@ const Home = () => {
                 </Box>
             </div>
 
-            <div className='center-text'>
-                <Stack className='custom-stack' direction="row" spacing={2}>
-                    {contracts.map((contract)=>(
-                        <Card key={contract.id} className='custom-card' variant="outlined" sx={{ maxWidth: 345 }}>
-                        <CardContent>
-                            <Typography variant="h5" component="div">
-                                {contract.name}
-                            </Typography>
-                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                3 sablon
-                            </Typography>
-                            <Typography variant="body2">
-                                Szükséges iratok:
-                                <br />
-                                személyi, lakcímkártya
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button onClick={e => handleClick(contract.id)} size="small">Kezdés</Button>
-                        </CardActions>
-                    </Card>
+            {/** Stepper */}
+            <Box
+                className='mx-auto'
+                sx={{ maxWidth: 800 }}>
+                <Stepper activeStep={activeStep} orientation="vertical">
+                    {steps.map((step, index) => (
+                        <Step key={step.label}>
+                            <StepLabel>
+                                {step.label}
+                            </StepLabel>
+
+                            <StepContent>
+                                <Typography>{step.description}</Typography>
+                                <Box sx={{ mb: 2 }}>
+                                    <div>
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleNext}
+                                            sx={{ mt: 1, mr: 1 }} >
+
+                                            {index === steps.length - 1 ? 'Kész' : 'Következő'}
+                                        </Button>
+                                        <Button
+                                            variant='outlined'
+                                            disabled={index === 0}
+                                            onClick={handleBack}
+                                            sx={{ mt: 1, mr: 1 }}>
+                                            Vissza
+                                        </Button>
+                                    </div>
+                                </Box>
+                            </StepContent>
+                        </Step>
                     ))}
-                </Stack>
-            </div>
-
-            <div className='center-text'>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        '& > :not(style)': {
-                            m: 1,
-                            width: 1200,
-                            height: 400,
-                        },
-                        justifyContent: 'center',
-                    }}>
-                    <Paper elevation={3}>
-                        <Typography
-                            className='paper-text'
-                            variant="h5"
-                            noWrap
-                            sx={{
-                                letterSpacing: '.1rem',
-                                color: 'black',
-                                textDecoration: 'none',
-                            }}>
-                            Szabd személyre, amennyire csak lehet!
-                        </Typography>
-
-                        <Divider className='custom-divider' variant="middle" />
-
-                        <Stack className='custom-stack' direction="row" spacing={3}>
-                            <Card variant="outlined" sx={{ maxWidth: 345 }}>
-                                <IconButton><UploadFileIcon fontSize='large' /></IconButton>
-                                <CardActionArea>
-                                    <CardContent>
-                                        <Typography className='paper-text' variant="h5" component="div">
-                                            Töltsd fel kedvenc sablonod!
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            Van egy jól bevált szerződés sablonod?
-                                            <br />
-                                            Töltsd fel és segíts másoknak is vele!
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-
-                            <Card variant="outlined" sx={{ maxWidth: 345 }}>
-                                <IconButton><BorderColorIcon fontSize='large' /></IconButton>
-                                <CardActionArea>
-                                    <CardContent>
-                                        <Typography className='paper-text' variant="h5" component="div">
-                                            Szabd személyre szerződésed!
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            Hiányzik még 1 mondtad a sablonból?
-                                            <br />
-                                            Semmi gond.
-                                            <br />
-                                            A sablon kiválasztása után lehetőséged van szerkeszteni a tartalmát!
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-
-                        </Stack>
+                </Stepper>
+                {activeStep === steps.length && (
+                    <Paper square elevation={0} sx={{ p: 3 }}>
+                        <Typography>Kész is van a szerződésed</Typography>
+                        <Button variant='outlined' onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+                            Újra
+                        </Button>
                     </Paper>
-                </Box>
+                )}
+            </Box>
+
+            {/** Contracts in Horizontal scrolling */}
+            <div className='m-4 p-3'>
+                <TableContainer style={{ width: '100%', marginLeft: 0 }}>
+                    <Table className={tableClasses.table} aria-label="simple table">
+                        <TableBody>
+                            <TableRow>
+                                {contracts.map((contract) => (
+                                    <TableCell key={contract.id} align="center">
+                                        <Card key={contract.id} className='custom-card shadow p-3 mb-5 bg-white rounded' sx={{ width: 300, height: 220 }}>
+                                            <CardContent>
+                                                <Typography className='mb-2' variant="h5" component="div">
+                                                    {contract.name}
+                                                </Typography>
+                                                <Typography variant="body2">
+                                                    <b>Szükséges iratok:</b>
+                                                    <br />
+                                                    {contract.documents}
+                                                </Typography>
+                                            </CardContent>
+                                            <CardActions className='custom-button-container'>
+                                                <Button
+                                                    onClick={e => handleClick(contract.id)}
+                                                    endIcon={<KeyboardArrowRightIcon />}
+                                                    className="mt-auto"
+                                                    size="medium"
+                                                    variant="contained"><b>Kezdés</b></Button>
+                                            </CardActions>
+                                        </Card>
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </div>
 
+            {/** Error */}
+            <Dialog
+                open={openErrorDialog}
+                onClose={handleCloseErrorDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">
+                    {"Hoppá.. Valami hiba történt!"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Kérlek töltsd újra az oldalt vagy gyere vissza később.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant='contained' onClick={handleCloseErrorDialog} autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
-            {/*
-            <div className='options'>
-                <Button onClick={handleClickList} variant="contained" size='large'>Szerződések listázása</Button>
-                <Button onClick={handleClickUpload} variant="contained" size='large'>Szerződés feltöltése</Button>
-            </div>
-            */}
         </>
     )
 
 };
 export default Home;
-
-/**
- * TO DO:
- * 
- * Personal Data oldal
- * Statikus design
- * Backend szerinti design
- * ocr
- * 
- * Tartalmi oldal
- * Statikus design
- * Backend szerinti design
- * 
- * Szerződés generálása
-*/

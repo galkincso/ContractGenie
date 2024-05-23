@@ -1,9 +1,9 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DoneIcon from '@mui/icons-material/Done';
 import TextareaAutosize from 'react-textarea-autosize';
-import PDFfile from './PDFfile';
+import PDFfile from '../components/PDFfile';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -23,20 +23,22 @@ const ContentModifier = () => {
             formatText(response.data.content);
             setContract(response.data);
             })
+        .catch(err => {
+            alert('Hoppá.. Valami hiba történt');
+        })
         
         const items = JSON.parse(localStorage.getItem('items'));
         if (items) setPersonalData(items);  
-        console.log("Items: ", items);    
-        
-
     }, [])
 
     function handleBack() {
        navigate(-1);
     }
-    function handleClick() {
-        console.log("Adat: ", personalData[0]);
-    }
+    
+    /**
+     * Formats and breaks the text received in the parameter according to the numbers in the text
+     * @param {contract content} text 
+     */
     function formatText(text) {
         var formattedText = '';
 
@@ -53,7 +55,7 @@ const ContentModifier = () => {
 
     return (
         <>
-            <div className='center-text'>
+            <div className='center-text m-5'>
                 <Box sx={{ width: '100%' }}>
                     <Typography variant="h4">
                         Szerződés tartalma
@@ -62,7 +64,7 @@ const ContentModifier = () => {
             </div>
 
             <div className='center-text'>
-                <TextareaAutosize type="text" className='custom-textarea' onChange={e => setContent(e.target.value)} defaultValue={content} />
+                <TextareaAutosize type="text" className='custom-textarea shadow-lg p-3 mb-5 bg-white rounded' onChange={e => setContent(e.target.value)} defaultValue={content} />
             </div>
 
             <div className='btnBack options'>
@@ -82,20 +84,3 @@ const ContentModifier = () => {
     )
 };
 export default ContentModifier;
-
-/**
- * {
-          namingConvention: "Bérbeadó",
-          name: "GÁL KINCSŐ DÓRA",
-          info: "2022 TAHITÓTFALU"
-        },
-        {
-          namingConvention: "Bérbeadó",
-          info: "9493783218"
-        },
-        {
-          namingConvention: "Bérlő",
-          name: "TESZT Elek",
-          info: "1162 Buadpest"
-        }
- */

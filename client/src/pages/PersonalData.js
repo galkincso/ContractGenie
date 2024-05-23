@@ -1,4 +1,4 @@
-import { Box, Button, Input, Paper, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from '@mui/material';
+import { Box, Button, Paper, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -16,31 +16,56 @@ const PersonalData = () => {
     const [contract, setContract] = useState('');
     const navigate = useNavigate();
     const [personalData, setPersonalData] = useState([]);
+    const [updatePersonalData, setUpdatePersonalData] = useState(null);
 
     useEffect(() => {
         axios
             .get('/contract/get/' + { id }.id)
             .then(response => setContract(response.data))
+            .catch(err => {
+                alert('Hoppá.. Valami hiba történt');
+            })
     }, [])
 
-    const worker = createWorker();
+    /**
+     * The upload is asynchronous and therefore the setting of personalData must also be asynchronous
+     */
+    useEffect(() => {
+        if (updatePersonalData) {
+            setPersonalData([...personalData, updatePersonalData]);
+        }
+    }, [updatePersonalData])
 
+    /**
+     * OCR API Call
+     * @param {image} toConvertImage 
+     * @returns text from the image
+     */
     const convertImageToText = async (toConvertImage) => {
         const worker = await createWorker('hun');
         const ret = await worker.recognize(toConvertImage);
-        console.log(ret.data.text);
         await setOcrData([...ocrData, ret.data.text]);
         await worker.terminate();
+        //console.log("Raw Text: ", ret.data.text);
         return ret.data.text;
     }
 
+    /**
+     * Create an array based on the persons involved and the necessary documents
+     * @returns An array with the lines for upload documents
+     */
     function createTable() {
         var table = [];
         for (let i = 0; i < contract.subjects; i++) {
             for (let k = 0; k < contract.documents.length; k++) {
                 table.push(
                     <TableRow key={contract.id + i + k} >
-                        <TableCell align="left">{contract.namingConvention[i]}: {contract.documents[k]}</TableCell>
+                        <TableCell align="left">
+                            <h5>
+                            <b>{contract.namingConvention[i]}</b> : {contract.documents[k]}
+                            </h5>
+                            
+                            </TableCell>
                         <TableCell align="right">
                             <TextField onChange={(e) => handleUpload(e, contract.namingConvention[i], contract.documents[k])} type='file' id="standard-basic" label={contract.documents[k]} variant="standard" />
                         </TableCell>
@@ -54,6 +79,11 @@ const PersonalData = () => {
         navigate(-1);
     }
 
+    /**
+     * Question Ansering API Call
+     * @param {context text} data 
+     * @returns answer for the question
+     */
     async function query(data) {
         const response = await fetch(
             "https://api-inference.huggingface.co/models/mcsabai/huBert-fine-tuned-hungarian-squadv2",
@@ -62,31 +92,26 @@ const PersonalData = () => {
                 method: "POST",
                 body: JSON.stringify(data),
             }
-        );
+        )
+        if (response.status !== 200) {
+            alert('A képfeltöltés nem sikerült, próbáld újra!');
+        }
+        console.log("HF Error", response);
         const result = await response.json();
         return result;
     }
 
     const handleClick = async () => {
-        // itt kellene meghívni egy olyan függvényt, amelyik egy ciklusban beadja a fotókat az ai-nak, majd a szükséges datokat elmenti egy változóba
-        // jelenleg handleUpload utolsó komment sora hívja
-        //console.log("ocrData: ", ocrData);
-        /*for (let i = 0; i < ocrData.length; i++) {
-            query({
-                "inputs": {
-                    "question": "Név?",
-                    "context": ocrData[i]
-                }
-            }).then((response) => {
-                console.log(JSON.stringify(response));
-            });
-        }*/
-        console.log("átadva: ", personalData);
         await localStorage.setItem('items', JSON.stringify(personalData));
         navigate('/create/' + { id }.id + '/content');
-        
     }
-    
+
+    /**
+     * This function is handling the upload process
+     * @param {*} event 
+     * @param {naming conventions in the current contract} namingConv 
+     * @param {required personal documents in the current contract} document 
+     */
     const handleUpload = async (event, namingConv, document) => {
         /* Feltöltődik a kép */
         setFile([...file, event.target.files[0]]);
@@ -137,23 +162,28 @@ const PersonalData = () => {
                 // Személyi igazolvány szám
                 answer = await query({
                     "inputs": {
-                        "question": "Személyi igazolvány szám?",
+                        "question": "Okmányazonosító/Doc. No.?",
                         "context": text
                     }
                 });
+                console.log("Szem ig: ", answer.answer);
+                data = {
+                    "namingConvention": namingConv,
+                    "info": answer.answer
+                }
                 break;
             default:
                 // Hibakezelés
+                alert('Hiba történt az igazolvány csomportosításakor, kérlek próbálj újra később!')
                 break;
         }
-  
-        setPersonalData([...personalData, data]);
-        
-    }    
+        setUpdatePersonalData(data);
+        //console.log("Personal Data: ", personalData);
+    }
 
     return (
         <>
-            <div className='center-text'>
+            <div className='center-text m-5'>
                 <Box sx={{ width: '100%' }}>
                     <Typography variant="h4">
                         Szükséges adatok
@@ -163,7 +193,7 @@ const PersonalData = () => {
 
             <form>
                 <div className='list-table'>
-                    <Paper sx={{ width: '70%', overflow: 'hidden' }}>
+                    <Paper sx={{ width: '80%', overflow: 'hidden' }}>
                         <TableContainer component={Paper}>
                             <Table aria-label="simple table">
                                 <TableBody>
@@ -179,10 +209,10 @@ const PersonalData = () => {
                         variant="contained" size='large'
                         startIcon={<ArrowBackIcon />}>Vissza</Button>
                     <Button
-                        disabled={contract.subjects*contract.documents?.length !== personalData?.length}
+                        disabled={contract.subjects * contract.documents?.length !== personalData?.length}
                         onClick={handleClick}
                         variant="contained" size='large'
-                        startIcon={<DoneIcon />}>Tovább
+                        startIcon={<DoneIcon />}>{ 'Tovább'}
                     </Button>
                 </div>
             </form>
@@ -191,17 +221,3 @@ const PersonalData = () => {
     )
 };
 export default PersonalData;
-
-/*
-    const handleAnswear = async () => {
-        console.log("OCR Data: ", ocrData);
-        query({
-            "inputs": {
-                "question": "Melyik folyó szeli ketté Budapestet?",
-                "context": "Magyarország fővárosát, Budapestet a Duna folyó szeli ketté. A XIX. században épült Lánchíd a dimbes-dombos budai oldalt köti össze a sík Pesttel. A Várdomb oldalában futó siklóval juthatunk fel a budai Óvárosba, ahol a Budapesti Történeti Múzeum egészen a római időkig visszavezetve mutatja be a városi életet. A Szentháromság tér ad otthont a XIII. századi Mátyás-templomnak és a Halászbástya lőtornyainak, amelyekből messzire ellátva gyönyörködhetünk a városban."
-            }
-        }).then((response) => {
-            console.log(JSON.stringify(response));
-        });
-    }
-    */

@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.io.IOException
-import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -72,7 +70,6 @@ class FileController {
             ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("A törlés nem sikerült")
         }
     }
-
 
     /*
     @GetMapping("/analize/{filename:.+}")

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Page, Font, Text, Document, StyleSheet } from '@react-pdf/renderer';
 import Roboto from "../fonts/Roboto-Regular.ttf";
 
+/** Font family registration */
 Font.register({
     family: 'Roboto',
     src: Roboto,
@@ -50,8 +51,14 @@ const styles = StyleSheet.create({
     }
 });
 
+/** Date in the following format: YYYY.MM.DD */
 const date = new Date().toJSON().slice(0, 10);
 
+/**
+ * Create an array with the appropriate naming conventions and the current date for signatures
+ * @param {name, content, subjectNames, data} props 
+ * @returns An array with the text lines for signatures
+ */
 function createNamingConventions(props) {
     if (props.name === undefined) {
         return;
@@ -65,6 +72,11 @@ function createNamingConventions(props) {
         return table;
     }
 }
+/**
+ * Create the rows with personal data
+ * @param {name, content, subjectNames, data} props 
+ * @returns An array of text lines containing the details of the parties to the contract.
+ */
 function createHeader(props) {
     if (props.name !== undefined) {
         var table = [];
@@ -89,10 +101,9 @@ function createHeader(props) {
     }
 }
 
-
 const PDFfile = (props) => (
     <Document>
-        <Page size="A4" style={styles.body}>
+        <Page size="A4" style={styles.body} key={'1'}>
             <Text style={styles.header}>Contract Genie</Text>
             <Text style={styles.title}>{props.name}</Text>
             <Text style={styles.text}>1. Felek:</Text>
@@ -109,13 +120,3 @@ const PDFfile = (props) => (
     </Document>
 );
 export default PDFfile;
-
-/*
-{props.namingConventions.map((name) => (
-                    <Text style={styles.text}>{name} aláírása: ____________________ Dátum: {date} </Text>
-                ))}
-
-                <Text style={styles.text}>{props.subjectNames} aláírása: ____________________ Dátum: {date} </Text>
-            <Text style={styles.text}>{props.subjectNames} aláírása: _____________________ Dátum: {date} </Text>
-*/
-
