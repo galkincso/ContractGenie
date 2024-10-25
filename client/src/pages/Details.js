@@ -8,6 +8,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
+
 const Details = () => {
     const [content, setContent] = useState('');
     const [contract, setContract] = useState('');
@@ -17,17 +18,17 @@ const Details = () => {
 
     useEffect(() => {
         axios
-        .get('/contract/get/'+ {id}.id)
-        .then(response => {
-            formatText(response.data.content);
-            setContract(response.data);
+            .get('/contract/get/' + { id }.id)
+            .then(response => {
+                formatText(response.data.content);
+                setContract(response.data);
             })
-        .catch(err => {
-            alert('Hoppá.. Valami hiba történt');
-        })
-        
+            .catch(err => {
+                alert('Hoppá.. Valami hiba történt');
+            })
+
         const items = JSON.parse(localStorage.getItem('items'));
-        if (items) setPersonalData(items);  
+        if (items) setPersonalData(items);
     }, [])
 
     function handleBack(event) {
@@ -45,11 +46,11 @@ const Details = () => {
             "namingConvention": contract.namingConvention
         }
         axios.put('/contract/update', body)
-        .then(response => {
-            if (response.status === 200) {
-                navigate(-1);
-            }
-        })
+            .then(response => {
+                if (response.status === 200) {
+                    navigate(-1);
+                }
+            })
         //navigate(-1);
     }
 
@@ -62,7 +63,7 @@ const Details = () => {
 
         for (let i = 0; i < text.length; i++) {
             if (text[i] >= '0' && text[i] <= '9' && text[i + 1] === '.') {
-                formattedText += '\n\n';
+                formattedText += '<br/><br/>';
                 formattedText += text[i];
             } else {
                 formattedText += text[i];

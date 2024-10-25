@@ -1,6 +1,7 @@
 import React from 'react';
-import { Page, Font, Text, Document, StyleSheet } from '@react-pdf/renderer';
+import { Page, Font, Text, Document, StyleSheet, Image } from '@react-pdf/renderer';
 import Roboto from "../fonts/Roboto-Regular.ttf";
+import img from '../logo192.png';
 
 /** Font family registration */
 Font.register({
@@ -48,6 +49,10 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlign: "justify",
         fontFamily: "Roboto"
+    },
+    image: {
+        width: 150,
+        height: 150
     }
 });
 
@@ -101,6 +106,23 @@ function createHeader(props) {
     }
 }
 
+function createDigitalSignature(props) {
+    if (props.signatures.lenght === 0) {
+        return;
+    } else {
+        var table = [];
+        for (let i = 0; i < props.subjectNames.length; i++) {
+            table.push(
+                <Text style={styles.text}> {props.subjectNames[i]}  Dátum: {date} </Text>
+            );
+            table.push(
+                <Image src={props.signatures[i]} style={{width: 125, height: 30}}/>
+            );
+        }
+        return table;
+    }
+}
+
 const PDFfile = (props) => (
     <Document>
         <Page size="A4" style={styles.body} key={'1'}>
@@ -110,7 +132,17 @@ const PDFfile = (props) => (
             {createHeader(props)}
             <Text style={styles.text}>{props.content}</Text>
             <Text style={styles.text}>A felek aláírása előtt az alábbiak szerint került aláírásra és elfogadásra a jelen szerződés. </Text>
-            {createNamingConventions(props)}
+
+
+            {props.type === "pdf" ? (
+                createNamingConventions(props)
+            ) : props.type === "avdh" ? (
+                <Text />
+            ) : (
+                createDigitalSignature(props)
+            )
+            }
+
             <Text
                 style={styles.pageNumber}
                 render={({ pageNumber, totalPages }) =>
@@ -118,5 +150,6 @@ const PDFfile = (props) => (
                 } />
         </Page>
     </Document>
+
 );
 export default PDFfile;

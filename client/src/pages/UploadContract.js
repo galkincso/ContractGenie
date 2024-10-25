@@ -57,7 +57,17 @@ const UploadContract = () => {
             }
         }
     }
-    const systemCommand = "Egy képből kinyert szerződés szövegét fogod megkapni, ami helytelen. A feladatod, hogy írd le a szerződés tartalmi részét általános szerződéssablonként úgy, hogy a felek ne szerepeljenek benne, se az elején, se a végén, nem kell az aláírásoknak hely és az egész tartalmi részt tartalmazza. Továbbá írj egy max 3 mondatos összefoglalót, hogy mire jó az adott szerződés, írd le hány fél köti a szerződést, milyen személyes dokumentumok kellenek (ezek közül válaszd ki a szükségeseket: Személyi igazolvány, Lakcímkártya, Adóigazolvány) és hogyan hívod a feleket, milyen elnevezési konvenció van."
+    const contentSchema = {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+            "content": {
+                "type": "string"
+            }
+        }
+    }
+    const systemCommand = "Egy képből kinyert szerződés szövegét fogod megkapni, ami helytelen. A feladatod, hogy írd le a szerződés tartalmi részét általános szerződéssablonként úgy, hogy a felek ne szerepeljenek benne, se az elején, se a végén, nem kell az aláírásoknak hely.  Az egész tartalmi rész legyen benne, ami legalább olyan hosszú, mint az eredeti tartalom és tagold szépen. Továbbá írj egy max 2 mondatos összefoglalót, hogy mire jó az adott szerződés. Írd le hány fél köti a szerződést. Milyen személyes dokumentumok kellenek (ezek közül válaszd ki a szükségeseket: Személyi igazolvány, Lakcímkártya, Adóigazolvány). Hogyan hívod a feleket, milyen elnevezési konvenció van."
+    const contentCommand = "Egy képből kinyert szerződés szövegét fogod megkapni, ami helytelen. A feladatod, hogy írd le a szerződés tartalmi részét általános szerződéssablonként úgy, hogy a felek ne szerepeljenek benne, se az elején, se a végén, nem kell az aláírásoknak hely.  Az egész tartalmi rész legyen benne, ami legalább olyan hosszú, mint az eredeti tartalom és tagold szépen.";
 
     function handleBack(event) {
         navigate("/");
@@ -66,7 +76,6 @@ const UploadContract = () => {
     function handleContractName(event) {
         setContractName(event.target.value);
     }
-
 
     /**
      * OCR API Call
@@ -85,20 +94,19 @@ const UploadContract = () => {
     /**
      * ChatGPT API Call
      */
-    async function question_answer(text) {
+    async function question_answer(command, text, schema) {
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [
-                { role: "system", content: systemCommand },
+                { role: "system", content: command },
                 { role: "user", content: text }
             ],
-            functions: [{ name: "contract", description: "Írd le a szerződés tartalmát, összegzését, felek számát, szükséges dokumentumokat és elnevezési konvenciókat.", parameters: contractSchema }],
+            functions: [{ name: "contract", description: "Írd le a szerződéshez szükséges információkat.", parameters: schema}],
             function_call: { name: "contract" },
-            temperature: 0.5,
+            temperature: 1,
             top_p: 1,
         });
 
-        console.log(completion.choices[0]);
         return JSON.parse(completion.choices[0].message.function_call.arguments);
     }
 
@@ -112,63 +120,17 @@ const UploadContract = () => {
 
         /* OCR -> képből szöveg */
         var text = await convertImageToText(event.target.files[0]);
-        console.log("Image text: ", text);
+        //console.log("Image text: ", text);
 
         /*  ChatGPT -> szerződéssablon */
-        var contract_data = await question_answer(text);
-        console.log("Contract data: ", contract_data);
-
-        /* var mix = await question_answer(
-            text,
-            "Egy képből kinyert szerződés szövegét fogod megkapni. 1. Írj egy max 3 mondatos összegzőt, összefoglalót, hogy mire jó. 2. Egy számmal írd le, hogy hány fél köti a szerződést? pl: 2 2. Vesszővel elválasztva írd le, hogy a szerződés megkötéséhez milyen személyes dokumentumok kellenek: személyi igazolvány, lakcímkártya, adóigazolvány, stb. 3. Vesszővel elválasztva írd le a szerződő felek neveit, az elnevezési konvenciókat. Pl szállító, megrendelő"
-        );
-        console.log("Mix: ", mix); */
-
-        /*  ChatGPT -> tartalom */
-        /* var content = await question_answer(
-            text,
-            "Egy képből kinyert szerződés szövegét fogod megkapni. Írd le a szerződés tartalmi részét általános szerződéssablonként úgy, hogy a felek ne szerepeljenek benne, se az elején, se a végén, nemm kell az aláírásoknak hely. "
-        );
-        console.log("Content: ", content); */
-
-        /*  ChatGPT -> összegzés */
-        /* var summary = await question_answer(
-            contractName,
-            "Egy szerződésfajta nevét kapod meg. Írj egy max 3 mondatos összefoglalót, hogy mire jó az adott szerződés."
-        );
-        console.log("summary: ", summary); */
-
-        /*  ChatGPT -> felek az elnevezési konvenciókből kiszámolom */
-        /* var subjects = await question_answer(
-            contractName,
-            "Egy szerződésfajtának a nevét fogod megkapni. Hány fél köti? Csak a számot írd le."
-        );
-        console.log("subjects: ", subjects); */
-
-        /*  ChatGPT -> dokumentumok */
-        /*  var documents = await question_answer(
-             contractName,
-             "Egy szerződésfajta nevét kapod meg. Milyen személyes dokumentumok kellene egy ilyen szerződés megkötéséhez? Vesszővel elválasztva csak a nevüket írd le, ezek közül válassz: személyi igazolvány, lakcímkártya, adóigazolvány"
-         );
-         console.log("documents: ", documents); */
-
-        /*  ChatGPT -> elnevezések */
-        /* var namingConventions = await question_answer(
-            contractName,
-            "Egy szerződésfajta nevét kapod meg. Hogyan hívod a feleket? Mi az elnevezési konvenció? Csak a neveket írd le, vesszővel elválasztva, pl: bérlő, bérbeadó."
-        );
-        console.log("namingConventions: ", namingConventions);
-
-        var contract_data = {
-            "content": content,
-            "summary": summary,
-            "subjects": 2,
-            "documents": documents,
-            "namingConvention": namingConventions
-        } */
+        var contract_data = await question_answer(systemCommand, text, contractSchema);
+        if (contract_data.content.lenght < 950) {
+            // Új tartalom
+            var new_content = await question_answer(contentCommand, text, contentSchema);
+            contract_data.content = new_content.content;
+        }
+        
         setNewContract(contract_data);
-
-
     }
 
     async function handleSave() {
