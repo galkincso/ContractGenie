@@ -8,6 +8,7 @@ import org.springframework.boot.runApplication
 
 //@SpringBootApplication(exclude={ DataSourceAutoConfiguration.class})
 //@SpringBootApplication(exclude = { dataSourceScriptDatabaseInitializer.class})
+
 @SpringBootApplication
 class ContractGenieApplication {
 	@Resource

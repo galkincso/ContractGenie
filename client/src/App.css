@@ -70,8 +70,8 @@
   background-color: 'secondary';
 }
 .horizontal-list {
-  display: 'flex';
-  flex-direction: 'row';
+  display: flex;
+  flex-direction: row;
   padding: 0;
 }
 .custom-divider {
@@ -103,4 +103,48 @@
 }
 .MuiStepLabel-labelContainer span {
   font-size: x-large;
+}
+.center-div {
+  display: block;
+  margin:auto;
+}
+.modal-verification {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  gap: 20px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.sigContainer {
+  width: 80%;
+  height: 40%;
+  margin: 0 auto;
+  background-color: #fff;
+}
+.sigCanvas {
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+}
+.digitalSign {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  align-items: center;
+  width: 100%;
+}
+.digitalSignButtons {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    gap: 20px;
+    margin-top: 20px;
+    justify-content: center;
+}
+.clearButtons{
+  display: flex;
+  justify-content: end;
 }

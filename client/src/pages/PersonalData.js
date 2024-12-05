@@ -6,7 +6,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { Table } from 'reactstrap';
 import axios from 'axios';
 import { createWorker } from 'tesseract.js';
-
+import OpenAI from "openai";
 
 const PersonalData = () => {
 
@@ -17,6 +17,31 @@ const PersonalData = () => {
     const navigate = useNavigate();
     const [personalData, setPersonalData] = useState([]);
     const [updatePersonalData, setUpdatePersonalData] = useState(null);
+    const openai = new OpenAI({
+        apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+        dangerouslyAllowBrowser: true
+    });
+    const other_schema = {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+            "info": {
+                "type": "string"
+            }
+        }
+    }
+    const address_schema = {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string"
+            },
+            "address": {
+                "type:": "string"
+            }
+        }
+    }
 
     useEffect(() => {
         axios
@@ -46,7 +71,7 @@ const PersonalData = () => {
         const ret = await worker.recognize(toConvertImage);
         await setOcrData([...ocrData, ret.data.text]);
         await worker.terminate();
-        //console.log("Raw Text: ", ret.data.text);
+        console.log("Raw Text: ", ret.data.text);
         return ret.data.text;
     }
 
@@ -62,10 +87,10 @@ const PersonalData = () => {
                     <TableRow key={contract.id + i + k} >
                         <TableCell align="left">
                             <h5>
-                            <b>{contract.namingConvention[i]}</b> : {contract.documents[k]}
+                                <b>{contract.namingConvention[i]}</b> : {contract.documents[k]}
                             </h5>
-                            
-                            </TableCell>
+
+                        </TableCell>
                         <TableCell align="right">
                             <TextField onChange={(e) => handleUpload(e, contract.namingConvention[i], contract.documents[k])} type='file' id="standard-basic" label={contract.documents[k]} variant="standard" />
                         </TableCell>
@@ -80,25 +105,26 @@ const PersonalData = () => {
     }
 
     /**
-     * Question Ansering API Call
-     * @param {context text} data 
-     * @returns answer for the question
+     * ChatGPT API Call
      */
-    async function query(data) {
-        const response = await fetch(
-            "https://api-inference.huggingface.co/models/mcsabai/huBert-fine-tuned-hungarian-squadv2",
-            {
-                headers: { Authorization: "Bearer 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" },
-                method: "POST",
-                body: JSON.stringify(data),
-            }
-        )
-        if (response.status !== 200) {
-            alert('A képfeltöltés nem sikerült, próbáld újra!');
-        }
-        console.log("HF Error", response);
-        const result = await response.json();
-        return result;
+    async function question_answer(command, text, schema) {
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [
+                { role: "system", content: command },
+                { role: "user", content: text }
+            ],
+            functions: [{ 
+                name: "personal_data", 
+                description: "Írd le a kért adatot a megadott igazolványból kinyert szöveg alapján helyesen.", 
+                parameters: schema }],
+            function_call: { name: "personal_data" },
+            temperature: 0.8,
+            top_p: 1,
+        });
+
+        console.log(completion.choices[0]);
+        return JSON.parse(completion.choices[0].message.function_call.arguments);
     }
 
     const handleClick = async () => {
@@ -120,65 +146,53 @@ const PersonalData = () => {
         var text = await convertImageToText(event.target.files[0]);
 
         /* QA -> szövegből adatok */
-        var name;
-        var answer;
         var data;
+        var response;
         switch (document) {
             case "Lakcímkártya":
-                // Név
-                name = await query({
-                    "inputs": {
-                        "question": "Név?",
-                        "context": text
-                    }
-                });
-                // Lakóhely
-                answer = await query({
-                    "inputs": {
-                        "question": "Lakóhely?",
-                        "context": text
-                    }
-                });
+                // Név és Lakóhely
+                response = await question_answer(
+                                    "Egy lakcímkártya képéből kinyert szövegét fogod megkapni, ami sok hibát tartalmaz. A feladatod, hogy írd le a személy teljes nevét és a laakóhelyét kijavítva a hibákat.",
+                                    text,
+                                    address_schema
+                                )
                 data = {
                     "namingConvention": namingConv,
-                    "name": name.answer,
-                    "info": answer.answer
+                    "name": response.name,
+                    "info": response.address
                 }
+                console.log("Data: ", data);
                 break;
             case "Adóigazolvány":
                 // Adószám
-                answer = await query({
-                    "inputs": {
-                        "question": "ADÓAZONOSÍTÓ JEL?",
-                        "context": text
-                    }
-                });
+                response = await question_answer(
+                                    "Egy adóigazolvány képéből kinyert szövegét fogod megkapni, ami sok hibát tartalmaz. A feladatod, hogy írd le az adóazonosító jelet kijavítva a hibákat.",
+                                    text,
+                                    other_schema
+                                )
                 data = {
                     "namingConvention": namingConv,
-                    "info": answer.answer
+                    "info": response.info
                 }
                 break;
             case "Személyi igazolvány":
                 // Személyi igazolvány szám
-                answer = await query({
-                    "inputs": {
-                        "question": "Okmányazonosító/Doc. No.?",
-                        "context": text
-                    }
-                });
-                console.log("Szem ig: ", answer.answer);
+                response = await question_answer(
+                                    "Egy személyi igazolvány képéből kinyert szövegét fogod megkapni, ami sok hibát tartalmaz. A feladatod, hogy írd le az okmányazonosító számot (Doc. No.) kijavítva a hibákat.",
+                                    text,
+                                    other_schema
+                                )
                 data = {
                     "namingConvention": namingConv,
-                    "info": answer.answer
+                    "info": response.info
                 }
                 break;
             default:
                 // Hibakezelés
-                alert('Hiba történt az igazolvány csomportosításakor, kérlek próbálj újra később!')
+                alert('Hiba történt az igazolvány csomportosításakor, kérlek próbáld újra később!')
                 break;
         }
         setUpdatePersonalData(data);
-        //console.log("Personal Data: ", personalData);
     }
 
     return (
@@ -212,7 +226,7 @@ const PersonalData = () => {
                         disabled={contract.subjects * contract.documents?.length !== personalData?.length}
                         onClick={handleClick}
                         variant="contained" size='large'
-                        startIcon={<DoneIcon />}>{ 'Tovább'}
+                        startIcon={<DoneIcon />}>{'Tovább'}
                     </Button>
                 </div>
             </form>

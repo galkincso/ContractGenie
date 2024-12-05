@@ -1,10 +1,11 @@
 package contract.genie.resourceserver.controllers
 
 import contract.genie.resourceserver.models.Contract
+import contract.genie.resourceserver.models.Question
 import contract.genie.resourceserver.services.Service
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.*
+
 
 @RestController
 @CrossOrigin
@@ -43,4 +44,12 @@ class Controller (val service: Service) {
      */
     @DeleteMapping("/contract/delete/{id}")
     fun delete(@PathVariable id: String) = service.deleteContract(id)
+
+    /**
+     * Question-Answer endpoint
+     */
+    @GetMapping("/contract/ai")
+    fun question(@RequestBody body: Question) : ResponseEntity<String?> {
+        return ResponseEntity.ok(service.question(body))
+    }
 }

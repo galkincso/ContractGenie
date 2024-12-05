@@ -7,14 +7,12 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import axios from 'axios';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 
-
 const Home = () => {
 
     const navigate = useNavigate();
     const [contracts, setContracts] = useState([]);
     const [openErrorDialog, setOpenErrorDialog] = useState(false);
     const [activeStep, setActiveStep] = useState(0);
-
 
     useEffect(() => {
         axios
@@ -213,7 +211,6 @@ const Home = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-
         </>
     )
 

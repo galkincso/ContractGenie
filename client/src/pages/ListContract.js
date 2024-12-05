@@ -29,7 +29,7 @@ const ListContract = () => {
 
     const columns = [
         { id: 'name', label: 'Név' },
-        { id: 'analize', label: 'Kifejtés' },
+        { id: 'analize', label: 'Tartalom szerkesztése' },
         { id: 'delete', label: 'Törlés' },
     ];
 
@@ -46,30 +46,17 @@ const ListContract = () => {
     function handleBack() {
         navigate("/");
     };
-    function handleAnalize(id) {
+    function handleEdit(id) {
         navigate("/details/" + id);
     }
-     const getData = async (id) => {
-        var url = '/contract/'+id;
-        const response = await axios.get(url);
-        const fileName = response.data.fileName;
-              
-        // delete file
-        axios.delete('http://localhost:8080/files/delete/' + fileName)
-            .then(res => console.log("File: ", res))
-    }
-
 
     function handleDelete(id) {
-        getData(id);
-
-        // delete contract
-        axios.delete('http://localhost:8080/delete/' + id)
+        // Delete contract
+        axios.delete('http://localhost:8080/contract/delete/' + id)
             .then(res => console.log("Contract: ", res))
 
         setContracts(c => c.filter(item => item.id !== id));
     }
-
 
     return (
         <>
@@ -105,12 +92,10 @@ const ListContract = () => {
                                             <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                                 <TableCell key={row.id}>{row.name}</TableCell>
                                                 <TableCell key={row.name + 'analize'}><Button
-                                                    disabled
-                                                    onClick={e => { handleAnalize(row.id); }}
+                                                    onClick={e => { handleEdit(row.id); }}
                                                     variant="contained"
-                                                    color="primary">Kérem az adatokat</Button></TableCell>
+                                                    color="primary">Szerkesztem</Button></TableCell>
                                                 <TableCell key={row.name + 'delete'}><Button
-                                                    disabled
                                                     onClick={e => { handleDelete(row.id); }}
                                                     variant="contained"
                                                     color="primary">Törlöm a szerződést</Button></TableCell>
@@ -139,6 +124,5 @@ const ListContract = () => {
             </div>
         </>
     )
-
 };
 export default ListContract;
