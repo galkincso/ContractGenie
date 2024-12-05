@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DoneIcon from '@mui/icons-material/Done';
 import TextareaAutosize from 'react-textarea-autosize';
-import PDFfile from '../components/PDFfile';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -63,7 +61,7 @@ const Details = () => {
 
         for (let i = 0; i < text.length; i++) {
             if (text[i] >= '0' && text[i] <= '9' && text[i + 1] === '.') {
-                formattedText += '<br/><br/>';
+                formattedText += '\n\n';
                 formattedText += text[i];
             } else {
                 formattedText += text[i];
@@ -71,7 +69,6 @@ const Details = () => {
         }
         setContent(formattedText.slice(2));
     }
-
 
     return (
         <>

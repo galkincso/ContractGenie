@@ -105,28 +105,6 @@ const PersonalData = () => {
     }
 
     /**
-     * Question Ansering API Call
-     * @param {context text} data 
-     * @returns answer for the question
-     */
-    async function query(data) {
-        const response = await fetch(
-            "https://api-inference.huggingface.co/models/mcsabai/huBert-fine-tuned-hungarian-squadv2",
-            {
-                headers: { Authorization: "Bearer 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" },
-                method: "POST",
-                body: JSON.stringify(data),
-            }
-        )
-        if (response.status !== 200) {
-            alert('A képfeltöltés nem sikerült, próbáld újra!');
-        }
-        console.log("HF Error", response);
-        const result = await response.json();
-        return result;
-    }
-
-    /**
      * ChatGPT API Call
      */
     async function question_answer(command, text, schema) {
@@ -136,7 +114,10 @@ const PersonalData = () => {
                 { role: "system", content: command },
                 { role: "user", content: text }
             ],
-            functions: [{ name: "personal_data", description: "Írd le a kért adatot a megadott igazolványból kinyert szöveg alapján helyesen.", parameters: schema }],
+            functions: [{ 
+                name: "personal_data", 
+                description: "Írd le a kért adatot a megadott igazolványból kinyert szöveg alapján helyesen.", 
+                parameters: schema }],
             function_call: { name: "personal_data" },
             temperature: 0.8,
             top_p: 1,
@@ -212,7 +193,6 @@ const PersonalData = () => {
                 break;
         }
         setUpdatePersonalData(data);
-        //console.log("Personal Data: ", personalData);
     }
 
     return (

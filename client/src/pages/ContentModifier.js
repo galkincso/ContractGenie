@@ -11,8 +11,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '@mui/material/Modal';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import SignatureCanvas from 'react-signature-canvas'
-import { Height } from '@mui/icons-material';
-
 
 const ContentModifier = () => {
     const [content, setContent] = useState('');
@@ -32,8 +30,6 @@ const ContentModifier = () => {
         p: 4,
     };
     const [digitalSign, setDigitalSign] = useState(false);
-    const [trimmedDataURL_0, setTrimmedDataURL_0] = useState(null);
-    const [trimmedDataURL_1, setTrimmedDataURL_1] = useState(null);
     const [signatures, setSignatures] = useState([])
     const sigPad_0 = useRef(null);
     const sigPad_1 = useRef(null);
@@ -217,8 +213,6 @@ const ContentModifier = () => {
                                     }
 
                                 </div>
-
-
                             </div>
                         }
 

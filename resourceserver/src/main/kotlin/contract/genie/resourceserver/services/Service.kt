@@ -78,7 +78,4 @@ class Service (val db: Repository) {
         val responseBody: String? = response.body
         return responseBody
     }
-
-
-
 }

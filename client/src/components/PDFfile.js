@@ -1,7 +1,6 @@
 import React from 'react';
 import { Page, Font, Text, Document, StyleSheet, Image } from '@react-pdf/renderer';
 import Roboto from "../fonts/Roboto-Regular.ttf";
-import img from '../logo192.png';
 
 /** Font family registration */
 Font.register({

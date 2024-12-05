@@ -106,7 +106,6 @@ const UploadContract = () => {
             temperature: 1,
             top_p: 1,
         });
-
         return JSON.parse(completion.choices[0].message.function_call.arguments);
     }
 

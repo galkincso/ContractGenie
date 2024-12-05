@@ -58,7 +58,6 @@ const ListContract = () => {
         setContracts(c => c.filter(item => item.id !== id));
     }
 
-
     return (
         <>
             <div className='center-text'>
@@ -125,6 +124,5 @@ const ListContract = () => {
             </div>
         </>
     )
-
 };
 export default ListContract;
